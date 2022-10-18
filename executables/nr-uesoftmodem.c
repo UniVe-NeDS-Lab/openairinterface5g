@@ -245,6 +245,21 @@ uint64_t set_nrUE_optmask(uint64_t bitmask) {
 nrUE_params_t *get_nrUE_params(void) {
   return &nrUE_params;
 }
+/* initialie thread pools used for NRUE processing paralleliation */ 
+void init_tpools(uint8_t nun_dlsch_threads) {
+  char params[NR_RX_NB_TH*NR_NB_TH_SLOT*3+1]={0};
+  for (int i=0; i<NR_RX_NB_TH*NR_NB_TH_SLOT; i++) {
+    memcpy(params+(i*3),"-1,",3);
+  }
+  if (getenv("noThreads")) {
+     initTpool("n", &(nrUE_params.Tpool), false);
+     init_dlsch_tpool(0);
+   } else {
+     initTpool(params, &(nrUE_params.Tpool), false);
+     init_dlsch_tpool( nun_dlsch_threads);
+   }
+}
+
 
 static void get_options(void) {
 
@@ -429,7 +444,7 @@ int main( int argc, char **argv ) {
 #if T_TRACER
   T_Config_Init();
 #endif
-  initTpool(get_softmodem_params()->threadPoolConfig, &(nrUE_params.Tpool), cpumeas(CPUMEAS_GETSTATE));
+  init_tpools(nrUE_params.nr_dlsch_parallel);
   //randominit (0);
   set_taus_seed (0);
 
