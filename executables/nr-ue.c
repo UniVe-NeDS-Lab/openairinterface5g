@@ -35,6 +35,7 @@
 #include "SCHED_NR_UE/pucch_uci_ue_nr.h"
 #include "openair2/NR_UE_PHY_INTERFACE/NR_IF_Module.h"
 #include "o1_proto/ue_O1_measurements.pb-c.h"
+#include "openair3/UICC/usim_interface.h"
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/un.h>
@@ -145,6 +146,8 @@ static void *nr_O1_reporting(void *param)
     return;
   }
 
+  uicc_t uicc * = init_uicc("uicc");
+
   char buffer[1024];
   unsigned len;
   O1MeasurementsReport o1message = O1_MEASUREMENTS_REPORT__INIT;
@@ -165,6 +168,10 @@ static void *nr_O1_reporting(void *param)
     o1message.has_ssb_rsrp_dbm = 1;
     o1message.rx_rssi_dbm = ue->measurements.rx_rssi_dBm[0];
     o1message.has_rx_rssi_dbm = 1;
+    o1message.imsi = uicc.imsiStr;
+    // ue->sinr_CQI_dB;
+    // ue->sinr_dB;
+    // ue->sinr_eff
 
     len = o1_measurements_report__get_packed_size(&o1message);
     if (len >= 1024) {
