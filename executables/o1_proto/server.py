@@ -61,7 +61,7 @@ class CQISimulator():
         msg_as_json["event"]["measField"]["rx_rssi_dBm"] = o1_msg.rx_rssi_dBm
         msg_as_json["event"]["measField"]["ssb_rsrp_dBm"] = o1_msg.ssb_rsrp_dBm
         msg_as_json["event"]["measField"]["mcs"] = o1_msg.mcs
-        sendPostRequest(self.mr_url, msg_as_json)
+        #sendPostRequest(self.mr_url, msg_as_json)
 
 
 def sendPostRequest(url, msg):
@@ -87,12 +87,13 @@ if os.path.exists("/run/openair_o1"):
 with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as s:
     s.bind("/run/openair_o1")
     s.listen()
-    conn, addr = s.accept()
-    with conn:
-        print(f"Connected by {addr}")
-        while True:
-            data = conn.recv(1024)
-            if len(data) < 0:
-                break
-            ue_meas.ParseFromString(data)
-            CSim.report_cqi(ue_meas)
+    while True:
+        conn, addr = s.accept()
+        with conn:
+            print(f"Connected by {addr}")
+            while True:
+                data = conn.recv(1024)
+                if not data:
+                    break
+                ue_meas.ParseFromString(data)
+                CSim.report_cqi(ue_meas)
