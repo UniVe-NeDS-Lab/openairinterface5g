@@ -45,8 +45,6 @@ cqiMessage = {
 }
 
 
-
-
 class CQISimulator():
     def __init__(self, mr_url):
         self.mr_url = mr_url
@@ -83,6 +81,9 @@ mr_url = mr_host + ":" + mr_port + MR_PATH
 CSim = CQISimulator(mr_url)
 ue_meas = O1MeasurementsReport()
 
+if os.path.exists("/run/openair_o1"):
+    os.remove("/run/openair_o1")
+
 with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as s:
     s.bind("/run/openair_o1")
     s.listen()
@@ -91,5 +92,7 @@ with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as s:
         print(f"Connected by {addr}")
         while True:
             data = conn.recv(1024)
+            if len(data) < 0:
+                break
             ue_meas.ParseFromString(data)
             CSim.report_cqi(ue_meas)
