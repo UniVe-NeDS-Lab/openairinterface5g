@@ -2767,6 +2767,9 @@ add_executable(nr-softmodem
   ${OPENAIR_DIR}/executables/nr-gnb.c
   ${OPENAIR_DIR}/executables/nr-ru.c
   ${OPENAIR_DIR}/executables/nr-softmodem.c
+  ${OPENAIR_DIR}/openair3/O1/o1_proto/ue_O1_measurements.pb-c.c
+  ${OPENAIR_DIR}/openair3/O1/o1_gNB.c
+  ${OPENAIR_DIR}/openair3/O1/common.c  
   ${OPENAIR_DIR}/executables/softmodem-common.c
   ${OPENAIR1_DIR}/SIMULATION/TOOLS/taus.c
   ${OPENAIR_TARGETS}/ARCH/COMMON/common_lib.c
@@ -2810,9 +2813,11 @@ add_executable(nr-uesoftmodem
   ${rrc_h}
   ${s1ap_h}
 #  ${OPENAIR_BIN_DIR}/messages_xml.h
+  ${OPENAIR_DIR}/openair3/O1/o1_proto/ue_O1_measurements.pb-c.c
+  ${OPENAIR_DIR}/openair3/O1/o1_UE.c  
+  ${OPENAIR_DIR}/openair3/O1/common.c  
   ${OPENAIR_DIR}/executables/nr-uesoftmodem.c
   ${OPENAIR_DIR}/executables/nr-ue.c
-  ${OPENAIR_DIR}/executables/o1_proto/ue_O1_measurements.pb-c.c
   ${OPENAIR_DIR}/executables/softmodem-common.c
   ${OPENAIR1_DIR}/SIMULATION/TOOLS/taus.c
   ${OPENAIR_TARGETS}/ARCH/COMMON/common_lib.c

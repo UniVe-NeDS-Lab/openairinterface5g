@@ -41,20 +41,20 @@
 
 #include "common/ran_context.h"
 #include "executables/softmodem-common.h"
+#include "openair3/O1/o1.h"
 
 extern RAN_CONTEXT_t RC;
 
-
 #define MACSTATSSTRLEN 65536
 
-void *nrmac_stats_thread(void *arg) {
-
+void *nrmac_stats_thread(void *arg)
+{
   gNB_MAC_INST *gNB = (gNB_MAC_INST *)arg;
 
   char output[MACSTATSSTRLEN] = {0};
   const char *end = output + MACSTATSSTRLEN;
-  FILE *file = fopen("nrMAC_stats.log","w");
-  AssertFatal(file!=NULL,"Cannot open nrMAC_stats.log, error %s\n",strerror(errno));
+  FILE *file = fopen("nrMAC_stats.log", "w");
+  AssertFatal(file != NULL, "Cannot open nrMAC_stats.log, error %s\n", strerror(errno));
 
   while (oai_exit == 0) {
     char *p = output;
@@ -67,15 +67,17 @@ void *nrmac_stats_thread(void *arg) {
     fwrite(output, p - output, 1, file);
     fflush(file);
     sleep(1);
-    fseek(file,0,SEEK_SET);
+    fseek(file, 0, SEEK_SET);
   }
   fclose(file);
   return NULL;
 }
 
-void clear_mac_stats(gNB_MAC_INST *gNB) {
-  UE_iterator(gNB->UE_info.list, UE) {
-    memset(&UE->mac_stats,0,sizeof(UE->mac_stats));
+void clear_mac_stats(gNB_MAC_INST *gNB)
+{
+  UE_iterator(gNB->UE_info.list, UE)
+  {
+    memset(&UE->mac_stats, 0, sizeof(UE->mac_stats));
   }
 }
 
@@ -86,7 +88,8 @@ size_t dump_mac_stats(gNB_MAC_INST *gNB, char *output, size_t strlen, bool reset
   const char *end = output + strlen;
 
   pthread_mutex_lock(&gNB->UE_info.mutex);
-  UE_iterator(gNB->UE_info.list, UE) {
+  UE_iterator(gNB->UE_info.list, UE)
+  {
     NR_UE_sched_ctrl_t *sched_ctrl = &UE->UE_sched_ctrl;
     NR_mac_stats_t *stats = &UE->mac_stats;
     const int avg_rsrp = stats->num_rsrp_meas > 0 ? stats->cumul_rsrp / stats->num_rsrp_meas : 0;
@@ -106,67 +109,37 @@ size_t dump_mac_stats(gNB_MAC_INST *gNB, char *output, size_t strlen, bool reset
                        "UE %04x: CQI %d, RI %d, PMI (%d,%d)\n",
                        UE->rnti,
                        sched_ctrl->CSI_report.cri_ri_li_pmi_cqi_report.wb_cqi_1tb,
-                       sched_ctrl->CSI_report.cri_ri_li_pmi_cqi_report.ri+1,
+                       sched_ctrl->CSI_report.cri_ri_li_pmi_cqi_report.ri + 1,
                        sched_ctrl->CSI_report.cri_ri_li_pmi_cqi_report.pmi_x1,
                        sched_ctrl->CSI_report.cri_ri_li_pmi_cqi_report.pmi_x2);
 
-    output += snprintf(output,
-                       end - output,
-                       "UE %04x: dlsch_rounds ", UE->rnti);
-    output += snprintf(output, end - output, "%"PRIu64, stats->dl.rounds[0]);
+    output += snprintf(output, end - output, "UE %04x: dlsch_rounds ", UE->rnti);
+    output += snprintf(output, end - output, "%" PRIu64, stats->dl.rounds[0]);
     for (int i = 1; i < gNB->dl_bler.harq_round_max; i++)
-      output += snprintf(output, end - output, "/%"PRIu64, stats->dl.rounds[i]);
+      output += snprintf(output, end - output, "/%" PRIu64, stats->dl.rounds[i]);
 
-    output += snprintf(output,
-                       end - output,
-                       ", dlsch_errors %"PRIu64", pucch0_DTX %d, BLER %.5f MCS %d\n",
-                       stats->dl.errors,
-                       stats->pucch0_DTX,
-                       sched_ctrl->dl_bler_stats.bler,
-                       sched_ctrl->dl_bler_stats.mcs);
+    output += snprintf(
+        output, end - output, ", dlsch_errors %" PRIu64 ", pucch0_DTX %d, BLER %.5f MCS %d\n", stats->dl.errors, stats->pucch0_DTX, sched_ctrl->dl_bler_stats.bler, sched_ctrl->dl_bler_stats.mcs);
     if (reset_rsrp) {
       stats->num_rsrp_meas = 0;
       stats->cumul_rsrp = 0;
     }
-    output += snprintf(output,
-                       end - output,
-                       "UE %04x: dlsch_total_bytes %"PRIu64"\n",
-                       UE->rnti, stats->dl.total_bytes);
-    output += snprintf(output,
-                       end - output,
-                       "UE %04x: ulsch_rounds ", UE->rnti);
-    output += snprintf(output, end - output, "%"PRIu64, stats->ul.rounds[0]);
+    output += snprintf(output, end - output, "UE %04x: dlsch_total_bytes %" PRIu64 "\n", UE->rnti, stats->dl.total_bytes);
+    output += snprintf(output, end - output, "UE %04x: ulsch_rounds ", UE->rnti);
+    output += snprintf(output, end - output, "%" PRIu64, stats->ul.rounds[0]);
     for (int i = 1; i < gNB->ul_bler.harq_round_max; i++)
-      output += snprintf(output, end - output, "/%"PRIu64, stats->ul.rounds[i]);
+      output += snprintf(output, end - output, "/%" PRIu64, stats->ul.rounds[i]);
 
-    output += snprintf(output,
-                       end - output,
-                       ", ulsch_DTX %d, ulsch_errors %"PRIu64", BLER %.5f MCS %d\n",
-                       stats->ulsch_DTX,
-                       stats->ul.errors,
-                       sched_ctrl->ul_bler_stats.bler,
-                       sched_ctrl->ul_bler_stats.mcs);
-    output += snprintf(output,
-                       end - output,
-                       "UE %04x: ulsch_total_bytes_scheduled %"PRIu64", ulsch_total_bytes_received %"PRIu64"\n",
-                       UE->rnti,
-                       stats->ulsch_total_bytes_scheduled, stats->ul.total_bytes);
+    output += snprintf(
+        output, end - output, ", ulsch_DTX %d, ulsch_errors %" PRIu64 ", BLER %.5f MCS %d\n", stats->ulsch_DTX, stats->ul.errors, sched_ctrl->ul_bler_stats.bler, sched_ctrl->ul_bler_stats.mcs);
+    output += snprintf(
+        output, end - output, "UE %04x: ulsch_total_bytes_scheduled %" PRIu64 ", ulsch_total_bytes_received %" PRIu64 "\n", UE->rnti, stats->ulsch_total_bytes_scheduled, stats->ul.total_bytes);
 
     for (int lc_id = 0; lc_id < 63; lc_id++) {
       if (stats->dl.lc_bytes[lc_id] > 0)
-        output += snprintf(output,
-                           end - output,
-                           "UE %04x: LCID %d: %"PRIu64" bytes TX\n",
-                           UE->rnti,
-                           lc_id,
-                           stats->dl.lc_bytes[lc_id]);
+        output += snprintf(output, end - output, "UE %04x: LCID %d: %" PRIu64 " bytes TX\n", UE->rnti, lc_id, stats->dl.lc_bytes[lc_id]);
       if (stats->ul.lc_bytes[lc_id] > 0)
-        output += snprintf(output,
-                           end - output,
-                           "UE %04x: LCID %d: %"PRIu64" bytes RX\n",
-                           UE->rnti,
-                           lc_id,
-                           stats->ul.lc_bytes[lc_id]);
+        output += snprintf(output, end - output, "UE %04x: LCID %d: %" PRIu64 " bytes RX\n", UE->rnti, lc_id, stats->ul.lc_bytes[lc_id]);
     }
   }
   pthread_mutex_unlock(&gNB->UE_info.mutex);
@@ -193,36 +166,30 @@ static void mac_rrc_init(gNB_MAC_INST *mac, ngran_node_t node_type)
 
 void mac_top_init_gNB(ngran_node_t node_type)
 {
-  module_id_t     i;
-  gNB_MAC_INST    *nrmac;
+  module_id_t i;
+  gNB_MAC_INST *nrmac;
 
-  LOG_I(MAC, "[MAIN] Init function start:nb_nr_macrlc_inst=%d\n",RC.nb_nr_macrlc_inst);
+  LOG_I(MAC, "[MAIN] Init function start:nb_nr_macrlc_inst=%d\n", RC.nb_nr_macrlc_inst);
 
   if (RC.nb_nr_macrlc_inst > 0) {
+    RC.nrmac = (gNB_MAC_INST **)malloc16(RC.nb_nr_macrlc_inst * sizeof(gNB_MAC_INST *));
 
-    RC.nrmac = (gNB_MAC_INST **) malloc16(RC.nb_nr_macrlc_inst *sizeof(gNB_MAC_INST *));
-    
-    AssertFatal(RC.nrmac != NULL,"can't ALLOCATE %zu Bytes for %d gNB_MAC_INST with size %zu \n",
-                RC.nb_nr_macrlc_inst * sizeof(gNB_MAC_INST *),
-                RC.nb_nr_macrlc_inst, sizeof(gNB_MAC_INST));
+    AssertFatal(RC.nrmac != NULL, "can't ALLOCATE %zu Bytes for %d gNB_MAC_INST with size %zu \n", RC.nb_nr_macrlc_inst * sizeof(gNB_MAC_INST *), RC.nb_nr_macrlc_inst, sizeof(gNB_MAC_INST));
 
     for (i = 0; i < RC.nb_nr_macrlc_inst; i++) {
+      RC.nrmac[i] = (gNB_MAC_INST *)malloc16(sizeof(gNB_MAC_INST));
 
-      RC.nrmac[i] = (gNB_MAC_INST *) malloc16(sizeof(gNB_MAC_INST));
-      
-      AssertFatal(RC.nrmac != NULL,"can't ALLOCATE %zu Bytes for %d gNB_MAC_INST with size %zu \n",
-                  RC.nb_nr_macrlc_inst * sizeof(gNB_MAC_INST *),
-                  RC.nb_nr_macrlc_inst, sizeof(gNB_MAC_INST));
-      
-      LOG_D(MAC,"[MAIN] ALLOCATE %zu Bytes for %d gNB_MAC_INST @ %p\n",sizeof(gNB_MAC_INST), RC.nb_nr_macrlc_inst, RC.mac);
-      
+      AssertFatal(RC.nrmac != NULL, "can't ALLOCATE %zu Bytes for %d gNB_MAC_INST with size %zu \n", RC.nb_nr_macrlc_inst * sizeof(gNB_MAC_INST *), RC.nb_nr_macrlc_inst, sizeof(gNB_MAC_INST));
+
+      LOG_D(MAC, "[MAIN] ALLOCATE %zu Bytes for %d gNB_MAC_INST @ %p\n", sizeof(gNB_MAC_INST), RC.nb_nr_macrlc_inst, RC.mac);
+
       bzero(RC.nrmac[i], sizeof(gNB_MAC_INST));
-      
+
       RC.nrmac[i]->Mod_id = i;
 
-      RC.nrmac[i]->tag = (NR_TAG_t*)malloc(sizeof(NR_TAG_t));
-      memset((void*)RC.nrmac[i]->tag,0,sizeof(NR_TAG_t));
-        
+      RC.nrmac[i]->tag = (NR_TAG_t *)malloc(sizeof(NR_TAG_t));
+      memset((void *)RC.nrmac[i]->tag, 0, sizeof(NR_TAG_t));
+
       RC.nrmac[i]->ul_handle = 0;
 
       RC.nrmac[i]->first_MIB = true;
@@ -238,20 +205,25 @@ void mac_top_init_gNB(ngran_node_t node_type)
         RC.nrmac[i]->pre_processor_ul = nr_init_fr1_ulsch_preprocessor(i, 0);
       }
       if (!IS_SOFTMODEM_NOSTATS_BIT)
-         threadCreate(&RC.nrmac[i]->stats_thread, nrmac_stats_thread, (void*)RC.nrmac[i], "MAC_STATS", -1,     sched_get_priority_min(SCHED_OAI)+1 );
-      mac_rrc_init(RC.nrmac[i], node_type);
-    }//END for (i = 0; i < RC.nb_nr_macrlc_inst; i++)
+        threadCreate(&RC.nrmac[i]->stats_thread, nrmac_stats_thread, (void *)RC.nrmac[i], "MAC_STATS", -1, sched_get_priority_min(SCHED_OAI) + 1);
 
-    AssertFatal(rlc_module_init(1) == 0,"Could not initialize RLC layer\n");
+      mac_rrc_init(RC.nrmac[i], node_type);
+
+    } // END for (i = 0; i < RC.nb_nr_macrlc_inst; i++)
+    pthread_t o1_pthread;
+    if (1) { // TODO: add param to enable disable O1 reporting
+      threadCreate(&o1_pthread, nr_gNB_O1_reporting, &RC, "O1 MAC STATS", -1, OAI_PRIORITY_RT_LOW);
+    }
+
+    AssertFatal(rlc_module_init(1) == 0, "Could not initialize RLC layer\n");
 
     // These should be out of here later
     pdcp_layer_init();
 
-    if(IS_SOFTMODEM_NOS1 && get_softmodem_params()->phy_test)
+    if (IS_SOFTMODEM_NOS1 && get_softmodem_params()->phy_test)
       nr_DRB_preconfiguration(0x1234);
 
     rrc_init_nr_global_param();
-
 
   } else {
     RC.nrmac = NULL;

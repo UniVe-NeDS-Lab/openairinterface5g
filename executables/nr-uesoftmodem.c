@@ -82,7 +82,7 @@ unsigned short config_frames[4] = {2,9,11,13};
 #include <executables/nr-uesoftmodem.h>
 #include "executables/softmodem-common.h"
 #include "executables/thread-common.h"
-
+#include "openair3/O1/o1.h"
 #include "nr_nas_msg_sim.h"
 #include <openair1/PHY/MODULATION/nr_modulation.h>
 
