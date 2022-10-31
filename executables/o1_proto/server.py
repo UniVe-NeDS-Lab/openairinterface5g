@@ -83,17 +83,19 @@ ue_meas = O1MeasurementsReport()
 
 if os.path.exists("/run/openair_o1"):
     os.remove("/run/openair_o1")
-
-with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as s:
-    s.bind("/run/openair_o1")
-    s.listen()
-    while True:
-        conn, addr = s.accept()
-        with conn:
-            print(f"Connected by {addr}")
-            while True:
-                data = conn.recv(1024)
-                if not data:
-                    break
-                ue_meas.ParseFromString(data)
-                CSim.report_cqi(ue_meas)
+try:
+    with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as s:
+        s.bind("/run/openair_o1")
+        s.listen()
+        while True:
+            conn, addr = s.accept()
+            with conn:
+                print(f"Connected by {addr}")
+                while True:
+                    data = conn.recv(1024)
+                    if not data:
+                        break
+                    ue_meas.ParseFromString(data)
+                    CSim.report_cqi(ue_meas)
+except (KeyboardInterrupt, SystemExit):
+    print("O1 server received Sigterm, exiting")
