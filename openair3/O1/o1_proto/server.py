@@ -7,9 +7,6 @@ import random
 import requests
 import time
 
-HOST = "127.0.0.1"  # Standard loopback interface address (localhost)
-PORT = 5000  # Port to listen on (non-privileged ports are > 1023)
-
 
 MR_PATH = "/events/unauthenticated.IAB_MEASUREMENTS"
 FAULT_ID = "28"
@@ -52,16 +49,19 @@ class CQISimulator():
     def report_cqi(self, o1_msg: O1MeasurementReport):
         # o_ru_id = "ERICSSON-O-RU-1122" + str(random_time)
         print(f"Sending O1Msg: {o1_msg}")
-        # msg_as_json = cqiMessage
-        # msg_as_json["event"]["commonEventHeader"]["sourceName"] = o1_msg.imsi
-        # msg_as_json["event"]["measField"]["cell"] = 'test'
-        # msg_as_json["event"]["measField"]["rx_power_avg"] = o1_msg.rx_power_avg
-        # msg_as_json["event"]["measField"]["rx_power_tot"] = o1_msg.rx_power_tot
-        # msg_as_json["event"]["measField"]["n0_power_avg"] = o1_msg.n0_power_avg
-        # msg_as_json["event"]["measField"]["rx_rssi_dBm"] = o1_msg.rx_rssi_dBm
-        # msg_as_json["event"]["measField"]["ssb_rsrp_dBm"] = o1_msg.ssb_rsrp_dBm
-        # msg_as_json["event"]["measField"]["mcs"] = o1_msg.mcs
-        #sendPostRequest(self.mr_url, msg_as_json)
+        msg_as_json = cqiMessage
+        if o1_msg.HasField('ue_msg'):
+            msg_as_json["event"]["commonEventHeader"]["sourceName"] = o1_msg.ue_msg.imsi
+            msg_as_json["event"]["measField"]["cell"] = 'test'
+            msg_as_json["event"]["measField"]["rx_power_avg"] = o1_msg.ue_msg.rx_power_avg
+            msg_as_json["event"]["measField"]["rx_power_tot"] = o1_msg.ue_msg.rx_power_tot
+            msg_as_json["event"]["measField"]["n0_power_avg"] = o1_msg.ue_msg.n0_power_avg
+            msg_as_json["event"]["measField"]["rx_rssi_dBm"] = o1_msg.ue_msg.rx_rssi_dBm
+            msg_as_json["event"]["measField"]["ssb_rsrp_dBm"] = o1_msg.ue_msg.ssb_rsrp_dBm
+            msg_as_json["event"]["measField"]["mcs"] = o1_msg.ue_msg.mcs
+        else:
+            print("Unkown message type")
+        sendPostRequest(self.mr_url, msg_as_json)
 
 
 def sendPostRequest(url, msg):
@@ -73,9 +73,9 @@ def sendPostRequest(url, msg):
         print(e)
 
 
-mr_host = os.getenv("MR-HOST", "http://10.75.11.18")
+mr_host = os.getenv("MR_HOST", "http://10.75.11.18")
 print("Using MR Host from os: " + mr_host)
-mr_port = os.getenv("MR-PORT", "3904")
+mr_port = os.getenv("MR_PORT", "3904")
 print("Using MR Port from os: " + mr_port)
 mr_url = mr_host + ":" + mr_port + MR_PATH
 CSim = CQISimulator(mr_url)
