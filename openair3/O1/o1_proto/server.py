@@ -1,4 +1,4 @@
-from ue_O1_measurements_pb2 import O1MeasurementsReport
+from O1_measurements_pb2 import O1MeasurementReport
 
 import socket
 import json
@@ -49,18 +49,18 @@ class CQISimulator():
     def __init__(self, mr_url):
         self.mr_url = mr_url
 
-    def report_cqi(self, o1_msg: O1MeasurementsReport):
+    def report_cqi(self, o1_msg: O1MeasurementReport):
         # o_ru_id = "ERICSSON-O-RU-1122" + str(random_time)
         print(f"Sending O1Msg: {o1_msg}")
-        msg_as_json = cqiMessage
-        msg_as_json["event"]["commonEventHeader"]["sourceName"] = o1_msg.imsi
-        msg_as_json["event"]["measField"]["cell"] = 'test'
-        msg_as_json["event"]["measField"]["rx_power_avg"] = o1_msg.rx_power_avg
-        msg_as_json["event"]["measField"]["rx_power_tot"] = o1_msg.rx_power_tot
-        msg_as_json["event"]["measField"]["n0_power_avg"] = o1_msg.n0_power_avg
-        msg_as_json["event"]["measField"]["rx_rssi_dBm"] = o1_msg.rx_rssi_dBm
-        msg_as_json["event"]["measField"]["ssb_rsrp_dBm"] = o1_msg.ssb_rsrp_dBm
-        msg_as_json["event"]["measField"]["mcs"] = o1_msg.mcs
+        # msg_as_json = cqiMessage
+        # msg_as_json["event"]["commonEventHeader"]["sourceName"] = o1_msg.imsi
+        # msg_as_json["event"]["measField"]["cell"] = 'test'
+        # msg_as_json["event"]["measField"]["rx_power_avg"] = o1_msg.rx_power_avg
+        # msg_as_json["event"]["measField"]["rx_power_tot"] = o1_msg.rx_power_tot
+        # msg_as_json["event"]["measField"]["n0_power_avg"] = o1_msg.n0_power_avg
+        # msg_as_json["event"]["measField"]["rx_rssi_dBm"] = o1_msg.rx_rssi_dBm
+        # msg_as_json["event"]["measField"]["ssb_rsrp_dBm"] = o1_msg.ssb_rsrp_dBm
+        # msg_as_json["event"]["measField"]["mcs"] = o1_msg.mcs
         #sendPostRequest(self.mr_url, msg_as_json)
 
 
@@ -79,7 +79,7 @@ mr_port = os.getenv("MR-PORT", "3904")
 print("Using MR Port from os: " + mr_port)
 mr_url = mr_host + ":" + mr_port + MR_PATH
 CSim = CQISimulator(mr_url)
-ue_meas = O1MeasurementsReport()
+ue_meas = O1MeasurementReport()
 
 if os.path.exists("/run/openair_o1"):
     os.remove("/run/openair_o1")

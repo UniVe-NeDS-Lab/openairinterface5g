@@ -578,7 +578,6 @@ void nr_rx_sdu(const module_id_t gnb_mod_idP,
          LOG_W(NR_MAC,"Detected UL Failure on PUSCH after %d PUSCH DTX, stopping scheduling\n",
                UE->UE_sched_ctrl.pusch_consecutive_dtx_cnt);
          UE->UE_sched_ctrl.ul_failure = 1;
-
          nr_mac_gNB_rrc_ul_failure(gnb_mod_idP,CC_idP,frameP,slotP,rntiP);
       }
     }
