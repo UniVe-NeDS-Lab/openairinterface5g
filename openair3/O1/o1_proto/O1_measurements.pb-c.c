@@ -309,7 +309,7 @@ const ProtobufCMessageDescriptor o1_measurement_report__descriptor =
   (ProtobufCMessageInit) o1_measurement_report__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor o1_uemeasurement_report__field_descriptors[8] =
+static const ProtobufCFieldDescriptor o1_uemeasurement_report__field_descriptors[9] =
 {
   {
     "imsi",
@@ -407,12 +407,25 @@ static const ProtobufCFieldDescriptor o1_uemeasurement_report__field_descriptors
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
+  {
+    "rnti",
+    9,
+    PROTOBUF_C_LABEL_NONE,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(O1UEMeasurementReport, rnti),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
 };
 static const unsigned o1_uemeasurement_report__field_indices_by_name[] = {
   0,   /* field[0] = imsi */
   7,   /* field[7] = mcs */
   3,   /* field[3] = n0_power_avg */
   4,   /* field[4] = n0_power_tot */
+  8,   /* field[8] = rnti */
   1,   /* field[1] = rx_power_avg */
   2,   /* field[2] = rx_power_tot */
   5,   /* field[5] = rx_rssi_dBm */
@@ -421,7 +434,7 @@ static const unsigned o1_uemeasurement_report__field_indices_by_name[] = {
 static const ProtobufCIntRange o1_uemeasurement_report__number_ranges[1 + 1] =
 {
   { 1, 0 },
-  { 0, 8 }
+  { 0, 9 }
 };
 const ProtobufCMessageDescriptor o1_uemeasurement_report__descriptor =
 {
@@ -431,7 +444,7 @@ const ProtobufCMessageDescriptor o1_uemeasurement_report__descriptor =
   "O1UEMeasurementReport",
   "",
   sizeof(O1UEMeasurementReport),
-  8,
+  9,
   o1_uemeasurement_report__field_descriptors,
   o1_uemeasurement_report__field_indices_by_name,
   1,  o1_uemeasurement_report__number_ranges,

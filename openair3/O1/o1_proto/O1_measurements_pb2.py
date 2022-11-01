@@ -7,6 +7,7 @@ from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message
 from google.protobuf import reflection as _reflection
 from google.protobuf import symbol_database as _symbol_database
+from google.protobuf import descriptor_pb2
 # @@protoc_insertion_point(imports)
 
 _sym_db = _symbol_database.Default()
@@ -18,8 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='O1_measurements.proto',
   package='',
   syntax='proto3',
-  serialized_options=None,
-  serialized_pb=_b('\n\x15O1_measurements.proto\"\xa2\x01\n\x13O1MeasurementReport\x12&\n\x06ue_msg\x18\x01 \x01(\x0b\x32\x16.O1UEMeasurementReport\x12(\n\x07gnb_msg\x18\x02 \x01(\x0b\x32\x17.O1GNBMeasurementReport\x12\x1c\n\x03ulf\x18\x03 \x01(\x0b\x32\x0f.O1ULSCHFailure\x12\x1b\n\x04rrcf\x18\x04 \x01(\x0b\x32\r.O1RRCFailure\"\xb5\x01\n\x15O1UEMeasurementReport\x12\x0c\n\x04imsi\x18\x01 \x01(\t\x12\x14\n\x0crx_power_avg\x18\x02 \x01(\x05\x12\x14\n\x0crx_power_tot\x18\x03 \x01(\x05\x12\x14\n\x0cn0_power_avg\x18\x04 \x01(\x05\x12\x14\n\x0cn0_power_tot\x18\x05 \x01(\x05\x12\x13\n\x0brx_rssi_dBm\x18\x06 \x01(\x05\x12\x14\n\x0cssb_rsrp_dBm\x18\x07 \x01(\x05\x12\x0b\n\x03mcs\x18\x08 \x01(\x05\"\xae\x01\n\x16O1GNBMeasurementReport\x12\x0c\n\x04rnti\x18\x01 \x01(\x05\x12\x10\n\x08\x61vg_rsrp\x18\x02 \x01(\x05\x12\x19\n\x11srs_wide_band_snr\x18\x03 \x01(\x05\x12\x11\n\tdlsch_mcs\x18\x04 \x01(\x05\x12\x11\n\tulsch_mcs\x18\x05 \x01(\x05\x12\x0b\n\x03\x63qi\x18\x06 \x01(\x05\x12\x12\n\ndlsch_bler\x18\x07 \x01(\x02\x12\x12\n\nulsch_bler\x18\x08 \x01(\x02\"/\n\x0eO1ULSCHFailure\x12\x0c\n\x04rnti\x18\x01 \x01(\x05\x12\x0f\n\x07\x66\x61ilure\x18\x02 \x01(\x05\"-\n\x0cO1RRCFailure\x12\x0c\n\x04rnti\x18\x01 \x01(\x05\x12\x0f\n\x07\x66\x61ilure\x18\x02 \x01(\x05\x62\x06proto3')
+  serialized_pb=_b('\n\x15O1_measurements.proto\"\xa2\x01\n\x13O1MeasurementReport\x12&\n\x06ue_msg\x18\x01 \x01(\x0b\x32\x16.O1UEMeasurementReport\x12(\n\x07gnb_msg\x18\x02 \x01(\x0b\x32\x17.O1GNBMeasurementReport\x12\x1c\n\x03ulf\x18\x03 \x01(\x0b\x32\x0f.O1ULSCHFailure\x12\x1b\n\x04rrcf\x18\x04 \x01(\x0b\x32\r.O1RRCFailure\"\xc3\x01\n\x15O1UEMeasurementReport\x12\x0c\n\x04rnti\x18\t \x01(\x05\x12\x0c\n\x04imsi\x18\x01 \x01(\t\x12\x14\n\x0crx_power_avg\x18\x02 \x01(\x05\x12\x14\n\x0crx_power_tot\x18\x03 \x01(\x05\x12\x14\n\x0cn0_power_avg\x18\x04 \x01(\x05\x12\x14\n\x0cn0_power_tot\x18\x05 \x01(\x05\x12\x13\n\x0brx_rssi_dBm\x18\x06 \x01(\x05\x12\x14\n\x0cssb_rsrp_dBm\x18\x07 \x01(\x05\x12\x0b\n\x03mcs\x18\x08 \x01(\x05\"\xae\x01\n\x16O1GNBMeasurementReport\x12\x0c\n\x04rnti\x18\x01 \x01(\x05\x12\x10\n\x08\x61vg_rsrp\x18\x02 \x01(\x05\x12\x19\n\x11srs_wide_band_snr\x18\x03 \x01(\x05\x12\x11\n\tdlsch_mcs\x18\x04 \x01(\x05\x12\x11\n\tulsch_mcs\x18\x05 \x01(\x05\x12\x0b\n\x03\x63qi\x18\x06 \x01(\x05\x12\x12\n\ndlsch_bler\x18\x07 \x01(\x02\x12\x12\n\nulsch_bler\x18\x08 \x01(\x02\"/\n\x0eO1ULSCHFailure\x12\x0c\n\x04rnti\x18\x01 \x01(\x05\x12\x0f\n\x07\x66\x61ilure\x18\x02 \x01(\x05\"-\n\x0cO1RRCFailure\x12\x0c\n\x04rnti\x18\x01 \x01(\x05\x12\x0f\n\x07\x66\x61ilure\x18\x02 \x01(\x05\x62\x06proto3')
 )
 
 
@@ -38,35 +38,35 @@ _O1MEASUREMENTREPORT = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      options=None),
     _descriptor.FieldDescriptor(
       name='gnb_msg', full_name='O1MeasurementReport.gnb_msg', index=1,
       number=2, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      options=None),
     _descriptor.FieldDescriptor(
       name='ulf', full_name='O1MeasurementReport.ulf', index=2,
       number=3, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      options=None),
     _descriptor.FieldDescriptor(
       name='rrcf', full_name='O1MeasurementReport.rrcf', index=3,
       number=4, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      options=None),
   ],
   extensions=[
   ],
   nested_types=[],
   enum_types=[
   ],
-  serialized_options=None,
+  options=None,
   is_extendable=False,
   syntax='proto3',
   extension_ranges=[],
@@ -85,75 +85,82 @@ _O1UEMEASUREMENTREPORT = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='imsi', full_name='O1UEMeasurementReport.imsi', index=0,
+      name='rnti', full_name='O1UEMeasurementReport.rnti', index=0,
+      number=9, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='imsi', full_name='O1UEMeasurementReport.imsi', index=1,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      options=None),
     _descriptor.FieldDescriptor(
-      name='rx_power_avg', full_name='O1UEMeasurementReport.rx_power_avg', index=1,
+      name='rx_power_avg', full_name='O1UEMeasurementReport.rx_power_avg', index=2,
       number=2, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      options=None),
     _descriptor.FieldDescriptor(
-      name='rx_power_tot', full_name='O1UEMeasurementReport.rx_power_tot', index=2,
+      name='rx_power_tot', full_name='O1UEMeasurementReport.rx_power_tot', index=3,
       number=3, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      options=None),
     _descriptor.FieldDescriptor(
-      name='n0_power_avg', full_name='O1UEMeasurementReport.n0_power_avg', index=3,
+      name='n0_power_avg', full_name='O1UEMeasurementReport.n0_power_avg', index=4,
       number=4, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      options=None),
     _descriptor.FieldDescriptor(
-      name='n0_power_tot', full_name='O1UEMeasurementReport.n0_power_tot', index=4,
+      name='n0_power_tot', full_name='O1UEMeasurementReport.n0_power_tot', index=5,
       number=5, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      options=None),
     _descriptor.FieldDescriptor(
-      name='rx_rssi_dBm', full_name='O1UEMeasurementReport.rx_rssi_dBm', index=5,
+      name='rx_rssi_dBm', full_name='O1UEMeasurementReport.rx_rssi_dBm', index=6,
       number=6, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      options=None),
     _descriptor.FieldDescriptor(
-      name='ssb_rsrp_dBm', full_name='O1UEMeasurementReport.ssb_rsrp_dBm', index=6,
+      name='ssb_rsrp_dBm', full_name='O1UEMeasurementReport.ssb_rsrp_dBm', index=7,
       number=7, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      options=None),
     _descriptor.FieldDescriptor(
-      name='mcs', full_name='O1UEMeasurementReport.mcs', index=7,
+      name='mcs', full_name='O1UEMeasurementReport.mcs', index=8,
       number=8, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      options=None),
   ],
   extensions=[
   ],
   nested_types=[],
   enum_types=[
   ],
-  serialized_options=None,
+  options=None,
   is_extendable=False,
   syntax='proto3',
   extension_ranges=[],
   oneofs=[
   ],
   serialized_start=191,
-  serialized_end=372,
+  serialized_end=386,
 )
 
 
@@ -170,70 +177,70 @@ _O1GNBMEASUREMENTREPORT = _descriptor.Descriptor(
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      options=None),
     _descriptor.FieldDescriptor(
       name='avg_rsrp', full_name='O1GNBMeasurementReport.avg_rsrp', index=1,
       number=2, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      options=None),
     _descriptor.FieldDescriptor(
       name='srs_wide_band_snr', full_name='O1GNBMeasurementReport.srs_wide_band_snr', index=2,
       number=3, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      options=None),
     _descriptor.FieldDescriptor(
       name='dlsch_mcs', full_name='O1GNBMeasurementReport.dlsch_mcs', index=3,
       number=4, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      options=None),
     _descriptor.FieldDescriptor(
       name='ulsch_mcs', full_name='O1GNBMeasurementReport.ulsch_mcs', index=4,
       number=5, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      options=None),
     _descriptor.FieldDescriptor(
       name='cqi', full_name='O1GNBMeasurementReport.cqi', index=5,
       number=6, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      options=None),
     _descriptor.FieldDescriptor(
       name='dlsch_bler', full_name='O1GNBMeasurementReport.dlsch_bler', index=6,
       number=7, type=2, cpp_type=6, label=1,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      options=None),
     _descriptor.FieldDescriptor(
       name='ulsch_bler', full_name='O1GNBMeasurementReport.ulsch_bler', index=7,
       number=8, type=2, cpp_type=6, label=1,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      options=None),
   ],
   extensions=[
   ],
   nested_types=[],
   enum_types=[
   ],
-  serialized_options=None,
+  options=None,
   is_extendable=False,
   syntax='proto3',
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=375,
-  serialized_end=549,
+  serialized_start=389,
+  serialized_end=563,
 )
 
 
@@ -250,28 +257,28 @@ _O1ULSCHFAILURE = _descriptor.Descriptor(
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      options=None),
     _descriptor.FieldDescriptor(
       name='failure', full_name='O1ULSCHFailure.failure', index=1,
       number=2, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      options=None),
   ],
   extensions=[
   ],
   nested_types=[],
   enum_types=[
   ],
-  serialized_options=None,
+  options=None,
   is_extendable=False,
   syntax='proto3',
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=551,
-  serialized_end=598,
+  serialized_start=565,
+  serialized_end=612,
 )
 
 
@@ -288,28 +295,28 @@ _O1RRCFAILURE = _descriptor.Descriptor(
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      options=None),
     _descriptor.FieldDescriptor(
       name='failure', full_name='O1RRCFailure.failure', index=1,
       number=2, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
+      options=None),
   ],
   extensions=[
   ],
   nested_types=[],
   enum_types=[
   ],
-  serialized_options=None,
+  options=None,
   is_extendable=False,
   syntax='proto3',
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=600,
-  serialized_end=645,
+  serialized_start=614,
+  serialized_end=659,
 )
 
 _O1MEASUREMENTREPORT.fields_by_name['ue_msg'].message_type = _O1UEMEASUREMENTREPORT
