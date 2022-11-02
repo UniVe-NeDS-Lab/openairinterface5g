@@ -1,9 +1,12 @@
 
 #include "o1.h"
 #include "openair3/UICC/usim_interface.h"
+#include "openair2/LAYER2/NR_MAC_UE/mac_defs.h"
+#include "openair2/LAYER2/NR_MAC_UE/mac_proto.h"
 
 void *nr_ue_O1_reporting(void *param)
 {
+  NR_UE_MAC_INST_t *mac = get_mac_inst(0);
   uicc_t *uicc = init_uicc("uicc");
   int sockfd = connect_socket();
   char buffer[1024];
@@ -28,6 +31,7 @@ void *nr_ue_O1_reporting(void *param)
       uemessage.rx_rssi_dbm = ue->measurements.rx_rssi_dBm[0];
       // uemessage.has_rx_rssi_dbm = 1;
       uemessage.imsi = uicc->imsiStr;
+      uemessage.rnti = mac->crnti;
       // ue->sinr_CQI_dB;
       // ue->sinr_dB;
       // ue->sinr_eff
