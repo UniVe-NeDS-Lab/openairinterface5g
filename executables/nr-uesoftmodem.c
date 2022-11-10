@@ -85,6 +85,7 @@ unsigned short config_frames[4] = {2,9,11,13};
 #include "openair3/O1/o1.h"
 #include "nr_nas_msg_sim.h"
 #include <openair1/PHY/MODULATION/nr_modulation.h>
+#include "openair3/O1/o1.h"
 
 extern const char *duplex_mode[];
 THREAD_STRUCT thread_struct;
@@ -445,7 +446,7 @@ int main( int argc, char **argv ) {
 #endif
   LOG_I(HW, "Version: %s\n", PACKAGE_VERSION);
 
-  init_NR_UE(1,uecap_file,rrc_config_path);
+  NR_UE_RRC_INST_t *rrc_inst = init_NR_UE(1,uecap_file,rrc_config_path);
 
   int mode_offset = get_softmodem_params()->nsa ? NUMBER_OF_UE_MAX : 1;
   uint16_t node_number = get_softmodem_params()->node_number;
@@ -524,6 +525,13 @@ int main( int argc, char **argv ) {
 
     init_NR_UE_threads(1);
     printf("UE threads created by %ld\n", gettid());
+    if (1) { // TODO: Set a variable to enable / disable reporting
+      pthread_t o1_pthread;
+      O1_PTHREAD_ARGS pthread_args;
+      pthread_args.rrc_inst = rrc_inst;
+      pthread_args.ue = PHY_vars_UE_g[0][0];
+      threadCreate(&o1_pthread, nr_ue_O1_reporting, &pthread_args, "O1 Reporting", -1, OAI_PRIORITY_RT_LOW);
+    }
   }
 
   // wait for end of program

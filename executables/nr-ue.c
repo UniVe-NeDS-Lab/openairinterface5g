@@ -34,7 +34,6 @@
 #include "LAYER2/nr_pdcp/nr_pdcp_entity.h"
 #include "SCHED_NR_UE/pucch_uci_ue_nr.h"
 #include "openair2/NR_UE_PHY_INTERFACE/NR_IF_Module.h"
-#include "openair3/O1/o1.h"
 
 /*
  *  NR SLOT PROCESSING SEQUENCE
@@ -988,7 +987,7 @@ void *UE_thread(void *arg)
   return NULL;
 }
 
-void init_NR_UE(int nb_inst, char *uecap_file, char *rrc_config_path)
+NR_UE_RRC_INST_t *init_NR_UE(int nb_inst, char *uecap_file, char *rrc_config_path)
 {
   int inst;
   NR_UE_MAC_INST_t *mac_inst;
@@ -999,6 +998,8 @@ void init_NR_UE(int nb_inst, char *uecap_file, char *rrc_config_path)
     AssertFatal((mac_inst = nr_l2_init_ue(rrc_inst)) != NULL, "can not initialize L2 module\n");
     AssertFatal((mac_inst->if_module = nr_ue_if_module_init(inst)) != NULL, "can not initialize IF module\n");
   }
+
+  return rrc_inst;
 }
 
 void init_NR_UE_threads(int nb_inst)
@@ -1015,10 +1016,6 @@ void init_NR_UE_threads(int nb_inst)
     if (!IS_SOFTMODEM_NOSTATS_BIT) {
       pthread_t stat_pthread;
       threadCreate(&stat_pthread, nrL1_UE_stats_thread, UE, "L1_UE_stats", -1, OAI_PRIORITY_RT_LOW);
-    }
-    if (1) { //TODO: Set a variable to enable / disable reporting
-      pthread_t o1_pthread;
-      threadCreate(&o1_pthread, nr_ue_O1_reporting, UE, "O1 Reporting", -1, OAI_PRIORITY_RT_LOW);
     }
   }
 }
