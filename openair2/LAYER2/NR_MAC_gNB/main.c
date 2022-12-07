@@ -212,7 +212,7 @@ void mac_top_init_gNB(ngran_node_t node_type)
     } // END for (i = 0; i < RC.nb_nr_macrlc_inst; i++)
     pthread_t o1_pthread;
     if (1) { // TODO: add param to enable disable O1 reporting
-      threadCreate(&o1_pthread, nr_gNB_O1_reporting, &RC, "O1 MAC STATS", -1, OAI_PRIORITY_RT_LOW);
+      threadCreate(&o1_pthread, nr_gNB_O1_reporting, NULL, "O1 MAC STATS", -1, OAI_PRIORITY_RT_LOW);
     }
 
     AssertFatal(rlc_module_init(1) == 0, "Could not initialize RLC layer\n");

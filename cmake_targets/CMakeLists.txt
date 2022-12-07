@@ -2544,6 +2544,9 @@ add_library(oai_iqplayer MODULE
 	)
 set(CMAKE_MODULE_PATH "${OPENAIR_DIR}/cmake_targets/tools/MODULES" "${CMAKE_MODULE_PATH}")
 
+find_package (JSON-C REQUIRED)
+find_package(CURL REQUIRED) 
+
 #include T directory even if the T is off because T macros are in the code
 #no matter what
 include_directories("${OPENAIR_DIR}/common/utils/T")
@@ -2767,9 +2770,8 @@ add_executable(nr-softmodem
   ${OPENAIR_DIR}/executables/nr-gnb.c
   ${OPENAIR_DIR}/executables/nr-ru.c
   ${OPENAIR_DIR}/executables/nr-softmodem.c
-  ${OPENAIR_DIR}/openair3/O1/o1_proto/O1_measurements.pb-c.c
   ${OPENAIR_DIR}/openair3/O1/o1_gNB.c
-  ${OPENAIR_DIR}/openair3/O1/common.c  
+  ${OPENAIR_DIR}/openair3/O1/o1_json.c  
   ${OPENAIR_DIR}/executables/softmodem-common.c
   ${OPENAIR1_DIR}/SIMULATION/TOOLS/taus.c
   ${OPENAIR_TARGETS}/ARCH/COMMON/common_lib.c
@@ -2799,7 +2801,8 @@ target_link_libraries (nr-softmodem ${LIBXML2_LIBRARIES})
 target_link_libraries (nr-softmodem pthread m CONFIG_LIB rt crypt ${CRYPTO_LIBRARIES} ${OPENSSL_LIBRARIES} sctp  ${XFORMS_LIBRARIES} ${PROTOBUF_LIB}  ${CMAKE_DL_LIBS} ${LIBYAML_LIBRARIES} ${ATLAS_LIBRARIES})
 target_link_libraries (nr-softmodem ${LIB_LMS_LIBRARIES})
 target_link_libraries (nr-softmodem ${T_LIB})
-
+target_link_libraries (nr-softmodem ${JSON-C_LIBRARIES})
+target_link_libraries (nr-softmodem ${CURL_LIBRARIES})
 add_dependencies( nr-softmodem ldpc_orig ldpc_optim ldpc_optim8seg ldpc)
 
 if(T1_OFFLOAD_FOUND)
@@ -2812,10 +2815,7 @@ endif ()
 add_executable(nr-uesoftmodem
   ${rrc_h}
   ${s1ap_h}
-#  ${OPENAIR_BIN_DIR}/messages_xml.h
-  ${OPENAIR_DIR}/openair3/O1/o1_proto/O1_measurements.pb-c.c
-  ${OPENAIR_DIR}/openair3/O1/o1_UE.c  
-  ${OPENAIR_DIR}/openair3/O1/common.c  
+#  ${OPENAIR_BIN_DIR}/messages_xml.h  
   ${OPENAIR_DIR}/executables/nr-uesoftmodem.c
   ${OPENAIR_DIR}/executables/nr-ue.c
   ${OPENAIR_DIR}/executables/softmodem-common.c
