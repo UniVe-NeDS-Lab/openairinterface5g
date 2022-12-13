@@ -5,7 +5,7 @@
 #include "openair2/COMMON/rrc_messages_def.h"
 #include "openair2/COMMON/nas_messages_def.h"
 #if ENABLE_RAL
-  #include "openair2/COMMON/ral_messages_def.h"
+#include "openair2/COMMON/ral_messages_def.h"
 #endif
 #include "openair2/COMMON/s1ap_messages_def.h"
 #include "openair2/COMMON/x2ap_messages_def.h"
@@ -17,4 +17,4 @@
 #include "openair2/COMMON/flexran_messages_def.h"
 #include "openair2/COMMON/f1ap_messages_def.h"
 #include "openair2/COMMON/ngap_messages_def.h"
-
+#include "openair3/O1/o1_messages_def.h"

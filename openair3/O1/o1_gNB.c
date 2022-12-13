@@ -6,6 +6,7 @@ extern RAN_CONTEXT_t RC;
 
 void *nr_gNB_O1_reporting()
 {
+  init_curl();
   while (!oai_exit) {
     sleep(REPORT_INTERVAL);
     // o1_send_json(gen_hb());

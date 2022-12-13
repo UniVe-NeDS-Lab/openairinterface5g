@@ -3804,6 +3804,9 @@ void nr_rrc_subframe_process(protocol_ctxt_t *const ctxt_pP, const int CC_id) {
         // remove UE after 20 seconds after MAC (or else) has indicated UL failure
         LOG_I(RRC, "Removing UE %x instance, because of uplink failure timer timeout\n",
               ue_context_p->ue_context.rnti);
+        MessageDef *msg_p = itti_alloc_new_message (TASK_RRC_GNB, 0, INITIALIZE_MESSAGE);
+        extern instance_t DUuniqInstance;
+        itti_send_msg_to_task(TASK_O1, DUuniqInstance, msg_p);
         // o1_rrc_failure_reporting(ue_context_p->ue_context.rnti, 1);
         
         if(ue_context_p->ue_context.StatusRrc >= NR_RRC_CONNECTED){

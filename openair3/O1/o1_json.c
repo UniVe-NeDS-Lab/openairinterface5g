@@ -2,9 +2,20 @@
 
 int o1_seqn = 0;
 
+int init_curl()
+{
+}
+
 int o1_send_json(json_object *jo)
 {
-  CURL *curl = curl_easy_init();
+  CURL *curl;
+  curl_global_init(CURL_GLOBAL_DEFAULT);
+  curl = curl_easy_init();
+  struct curl_slist *headers = NULL;
+  headers = curl_slist_append(headers, "Accept: application/json");
+  headers = curl_slist_append(headers, "Content-Type: application/json");
+  headers = curl_slist_append(headers, "charset: utf-8");
+  curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
   curl_easy_setopt(curl, CURLOPT_URL, "http://localhost");
   curl_easy_setopt(curl, CURLOPT_TIMEOUT, 1L);
   char *enc_jo = json_object_to_json_string_ext(jo, JSON_C_TO_STRING_PLAIN);
@@ -12,8 +23,12 @@ int o1_send_json(json_object *jo)
   CURLcode res = curl_easy_perform(curl);
   if (res != CURLE_OK) {
     LOG_E(NR_MAC, "Failed POST: %s\n", curl_easy_strerror(res));
+    curl_easy_cleanup(curl);
     return -1;
   }
+  curl_easy_cleanup(curl);
+  curl_global_cleanup();
+  curl = NULL;
   return 0;
 }
 

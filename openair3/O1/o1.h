@@ -8,7 +8,7 @@
 #include <curl/curl.h>
 #include <time.h>
 
-#define REPORT_INTERVAL 5
+#define REPORT_INTERVAL 1
 
 // void *nr_ue_O1_reporting(void *param);
 void *nr_gNB_O1_reporting(void);
