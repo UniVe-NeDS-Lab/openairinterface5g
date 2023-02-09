@@ -25,7 +25,7 @@
 
 static o1_agent_t* agent = NULL;
 
-static pthread_t thrd_agent;
+//static pthread_t thrd_agent;
 
 static inline void* static_start_agent(void* a)
 {
@@ -39,11 +39,10 @@ void init_o1_agent_api(o1_agent_args_t const* args)
 {
   assert(agent == NULL);
   agent = o1_init_agent(args->url, args->report_interval);
-  //printf("O1 agent: %")
   // Spawn a new thread for the agent
-  const int rc = pthread_create(&thrd_agent, NULL, static_start_agent, NULL);
+  //const int rc = pthread_create(&thrd_agent, NULL, static_start_agent, NULL);
   // alternative using itti task:
-  // itti_create_task(TASK_O1, nr_gNB_O1_reporting, (void*)&args);
+  const int rc = itti_create_task(TASK_O1, static_start_agent, NULL);
   assert(rc == 0);
 }
 
@@ -51,6 +50,7 @@ void stop_o1_agent_api(void)
 {
   assert(agent != NULL);
   o1_free_agent(agent);
-  int const rc = pthread_join(thrd_agent, NULL);
-  assert(rc == 0);
+  itti_terminate_tasks(TASK_O1);
+//   int const rc = pthread_join(thrd_agent, NULL);
+//   assert(rc == 0);
 }
