@@ -84,9 +84,9 @@ json_object *gen_head(char *domain, char *event_id, char *event_name, char *even
   json_object_object_add(common_head, "sequence", json_object_new_int(++o1_seqn));
   json_object_object_add(common_head, "priority", json_object_new_string(priority));
   json_object_object_add(common_head, "reportingEntityId", json_object_new_string(""));
-  json_object_object_add(common_head, "reportingEntityName", json_object_new_string("OAI-gNB"));
+  json_object_object_add(common_head, "reportingEntityName", json_object_new_string("O-DU-1122"));
   json_object_object_add(common_head, "sourceId", json_object_new_string(""));
-  json_object_object_add(common_head, "sourceName", json_object_new_string("OAI-gNB")); //TODO add some id
+  json_object_object_add(common_head, "sourceName", json_object_new_string("O-DU-1122")); // TODO add some id
   json_object_object_add(common_head, "startEpochMicrosec", json_object_new_int64(get_now_time()));
   json_object_object_add(common_head, "lastEpochMicrosec", json_object_new_int64(get_now_time()));
   json_object_object_add(common_head, "nfNamingCode", json_object_new_string("OAI 5G gNB"));
@@ -94,6 +94,9 @@ json_object *gen_head(char *domain, char *event_id, char *event_name, char *even
   json_object_object_add(common_head, "timeZoneOffset", json_object_new_string(""));
   json_object_object_add(common_head, "version", json_object_new_string("4.0"));
   json_object_object_add(common_head, "vesEventListenerVersion", json_object_new_string("7.2.1"));
+  if(strcmp(domain, "stndDefined") == 0){
+    json_object_object_add(common_head, "stndDefinedNamespace", json_object_new_string("o-ran-sc-du-hello-world-pm-streaming-oas3"));
+  }
   return common_head;
 }
 
@@ -145,20 +148,50 @@ json_object *gen_fm()
 
 json_object *gen_pm(struct pm_fields pm_f)
 {
-  json_object *meas_fields = json_object_new_object();
-  json_object_object_add(meas_fields, "rnti", json_object_new_int(pm_f.rnti));
-  json_object_object_add(meas_fields, "avg_rsrp", json_object_new_int(pm_f.avg_rsrp));
-  json_object_object_add(meas_fields, "srs_wide_band_snr", json_object_new_int(pm_f.srs_wide_band_snr));
-  json_object_object_add(meas_fields, "dlsch_mcs", json_object_new_int(pm_f.dlsch_mcs));
-  json_object_object_add(meas_fields, "ulsch_mcs", json_object_new_int(pm_f.ulsch_mcs));
-  json_object_object_add(meas_fields, "cqi", json_object_new_int(pm_f.cqi));
-  json_object_object_add(meas_fields, "dlsch_bler", json_object_new_double(pm_f.dlsch_bler));
-  json_object_object_add(meas_fields, "ulsch_bler", json_object_new_double(pm_f.ulsch_bler));
+  //  json_object *meas_fields = json_object_new_object();
+  //   json_object_object_add(meas_fields, "rnti", json_object_new_int(pm_f.rnti));
+  //   json_object_object_add(meas_fields, "avg_rsrp", json_object_new_int(pm_f.avg_rsrp));
+  //   json_object_object_add(meas_fields, "srs_wide_band_snr", json_object_new_int(pm_f.srs_wide_band_snr));
+  //   json_object_object_add(meas_fields, "dlsch_mcs", json_object_new_int(pm_f.dlsch_mcs));
+  //   json_object_object_add(meas_fields, "ulsch_mcs", json_object_new_int(pm_f.ulsch_mcs));
+  //   json_object_object_add(meas_fields, "cqi", json_object_new_int(pm_f.cqi));
+  //   json_object_object_add(meas_fields, "dlsch_bler", json_object_new_double(pm_f.dlsch_bler));
+  //   json_object_object_add(meas_fields, "ulsch_bler", json_object_new_double(pm_f.ulsch_bler));
+  // json_object_object_add(meas_fields, "measurementInterval", json_object_new_int(1));
+  // json_object_object_add(meas_fields, "measurementFieldsVersion", json_object_new_string("4.0"));
+  // json_object_object_add(meas_fields, "additionalFields", additional_information);
+  // json_object_object_add(event, "measurementFields", meas_fields);
+  
   json_object *additional_information = json_object_new_object();
-  json_object_object_add(meas_fields, "additionalFields", additional_information);
+
+
+  json_object *meas = json_object_new_object();
+  json_object_object_add(meas,
+                         "measurement-type-instance-reference",
+                         json_object_new_string("/o-ran-sc-du-hello-world:network-function/distributed-unit-functions[id='O-DU-1122']/cell[id='cell-1']/supported-measurements[performance-measurement-type='(urn:o-ran-sc:yang:o-ran-sc-du-hello-world?revision=2021-11-23)user-equipment-average-throughput-uplink']/supported-snssai-subcounter-instances[slice-differentiator='1'][slice-service-type='1']"));
+  json_object_object_add(meas, "unit", json_object_new_string("kbit/s"));
+  json_object_object_add(meas, "value", json_object_new_int(53707));
+  json_object *meas_array = json_object_new_array_ext(1);
+  json_object_array_add(meas_array, meas);
+  json_object *data_fields = json_object_new_object();
+  json_object_object_add(data_fields, "operational-state", json_object_new_string("enabled"));
+  json_object_object_add(data_fields, "start-time", json_object_new_string("2023-02-21T20:19:40.0Z"));
+  json_object_object_add(data_fields, "job-tag", json_object_new_string("my-job-tag"));
+  json_object_object_add(data_fields, "administrative-state", json_object_new_string("unlocked"));
+  json_object_object_add(data_fields, "user-label", json_object_new_string("pm"));
+  json_object_object_add(data_fields, "granularity-period", json_object_new_int(10));
+  time_t rawtime;
+  time(&rawtime);
+  char str_time[20];
+  sprintf(str_time, "pm-1_%d", rawtime);
+  json_object_object_add(data_fields, "id", json_object_new_string(str_time));
+  json_object_object_add(data_fields, "measurements", meas_array);
   json_object *event = json_object_new_object();
-  json_object_object_add(event, "measurementFields", meas_fields);
-  json_object_object_add(event, "commonEventHeader", gen_head("measurement", "pm-1", "stndDefined_performanceMeasurementStreaming", "performanceMeasurementStreaming", "Low"));
+  json_object *stnd_fields = json_object_new_object();
+  json_object_object_add(stnd_fields, "stndDefinedFieldsVersion", json_object_new_string("1.0"));
+  json_object_object_add(stnd_fields, "data", data_fields);
+  json_object_object_add(event, "stndDefinedFields", stnd_fields);
+  json_object_object_add(event, "commonEventHeader", gen_head("stndDefined", "pm-1", "stndDefined_performanceMeasurementStreaming", "performanceMeasurementStreaming", "Low"));
   json_object *root = json_object_new_object();
   json_object_object_add(root, "event", event);
   return root;
@@ -172,8 +205,7 @@ json_object *gen_pnf()
   json_object_object_add(pnf_fields, "macAddress", json_object_new_string("1a:2e:4c:31:ee:f4"));
   json_object_object_add(pnf_fields, "manufactureDate", json_object_new_string("2019-08-16"));
   json_object_object_add(pnf_fields, "modelNumber", json_object_new_string("OAI gNB"));
-  json_object_object_add(pnf_fields, "oamV4IpAddress", json_object_new_string("0.0.0.0"));
-  json_object_object_add(pnf_fields, "oamV6IpAddress", json_object_new_string("::1"));
+  json_object_object_add(pnf_fields, "oamV4IpAddress", json_object_new_string("10.75.10.109"));
   json_object_object_add(pnf_fields, "serialNumber", json_object_new_string("OAI gNB v0"));
   json_object_object_add(pnf_fields, "softwareVersion", json_object_new_string(""));
   json_object_object_add(pnf_fields, "unitFamily", json_object_new_string("OAI"));

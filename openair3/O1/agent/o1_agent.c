@@ -52,10 +52,12 @@ void o1_start_agent(o1_agent_t* ag)
 {
   //init_curl();
   o1_send_json(ag->url, gen_pnf());
+  
   while (!ag->agent_stopped) {
     printf("O1 Reporting running, sleep %d\n", ag->report_interval);
     sleep(ag->report_interval);
-    o1_send_json(ag->url, gen_hb());
+    //o1_send_json(ag->url, gen_hb());
+    o1_send_json(ag->url, gen_pm(0));
     for (int i = 0; i < RC.nb_nr_macrlc_inst; i++) {
       pthread_mutex_lock(&RC.nrmac[i]->UE_info.mutex);
       struct pm_fields pmf[MAX_MOBILES_PER_GNB + 1];
