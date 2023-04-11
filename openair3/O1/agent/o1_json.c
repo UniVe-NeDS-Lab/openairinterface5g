@@ -94,7 +94,7 @@ json_object *gen_head(char *domain, char *event_id, char *event_name, char *even
   json_object_object_add(common_head, "timeZoneOffset", json_object_new_string(""));
   json_object_object_add(common_head, "version", json_object_new_string("4.0"));
   json_object_object_add(common_head, "vesEventListenerVersion", json_object_new_string("7.2.1"));
-  if(strcmp(domain, "stndDefined") == 0){
+  if (strcmp(domain, "stndDefined") == 0) {
     json_object_object_add(common_head, "stndDefinedNamespace", json_object_new_string("o-ran-sc-du-hello-world-pm-streaming-oas3"));
   }
   return common_head;
@@ -105,7 +105,7 @@ json_object *gen_hb()
   time_t rawtime;
   time(&rawtime);
   char str_time[20];
-  sprintf(str_time, "%d", rawtime); 
+  sprintf(str_time, "%d", rawtime);
   json_object *heartbeat_fields = json_object_new_object();
   json_object_object_add(heartbeat_fields, "heartbeatFieldsVersion", json_object_new_string("3.0"));
   json_object_object_add(heartbeat_fields, "heartbeatInterval", json_object_new_int(20));
@@ -161,17 +161,35 @@ json_object *gen_pm(struct pm_fields pm_f)
   // json_object_object_add(meas_fields, "measurementFieldsVersion", json_object_new_string("4.0"));
   // json_object_object_add(meas_fields, "additionalFields", additional_information);
   // json_object_object_add(event, "measurementFields", meas_fields);
-  
-  json_object *additional_information = json_object_new_object();
 
+  // json_object *additional_information = json_object_new_object();
 
+  json_object *meas_array = json_object_new_array_ext(4);
+  // json_object *meas = json_object_new_object();
+  //  json_object_object_add(meas,
+  //                         "measurement-type-instance-reference",
+  //                         json_object_new_string("/o-ran-sc-du-hello-world:network-function/distributed-unit-functions[id='O-DU-1122']/cell[id='cell-1']/supported-measurements[performance-measurement-type='(urn:o-ran-sc:yang:o-ran-sc-du-hello-world?revision=2021-11-23)user-equipment-average-throughput-uplink']/supported-snssai-subcounter-instances[slice-differentiator='1'][slice-service-type='1']"));
+  //  json_object_object_add(meas, "unit", json_object_new_string("kbit/s"));
+  //  json_object_object_add(meas, "value", json_object_new_int(53707));
   json_object *meas = json_object_new_object();
-  json_object_object_add(meas,
-                         "measurement-type-instance-reference",
-                         json_object_new_string("/o-ran-sc-du-hello-world:network-function/distributed-unit-functions[id='O-DU-1122']/cell[id='cell-1']/supported-measurements[performance-measurement-type='(urn:o-ran-sc:yang:o-ran-sc-du-hello-world?revision=2021-11-23)user-equipment-average-throughput-uplink']/supported-snssai-subcounter-instances[slice-differentiator='1'][slice-service-type='1']"));
-  json_object_object_add(meas, "unit", json_object_new_string("kbit/s"));
-  json_object_object_add(meas, "value", json_object_new_int(53707));
-  json_object *meas_array = json_object_new_array_ext(1);
+  json_object_object_add(meas, "measurement-type-instance-reference", json_object_new_string("rnti"));
+  json_object_object_add(meas, "unit", json_object_new_string("id"));
+  json_object_object_add(meas, "value", json_object_new_int(pm_f.rnti));
+  json_object_array_add(meas_array, meas);
+  meas = json_object_new_object();
+  json_object_object_add(meas, "measurement-type-instance-reference", json_object_new_string("avg_rsrp"));
+  json_object_object_add(meas, "unit", json_object_new_string("dBm"));
+  json_object_object_add(meas, "value", json_object_new_int(pm_f.avg_rsrp));
+  json_object_array_add(meas_array, meas);
+  meas = json_object_new_object();
+  json_object_object_add(meas, "measurement-type-instance-reference", json_object_new_string("dlsch_bler"));
+  json_object_object_add(meas, "unit", json_object_new_string(""));
+  json_object_object_add(meas, "value", json_object_new_int(pm_f.dlsch_bler));
+  json_object_array_add(meas_array, meas);
+  meas = json_object_new_object();
+  json_object_object_add(meas, "measurement-type-instance-reference", json_object_new_string("ulsch_bler"));
+  json_object_object_add(meas, "unit", json_object_new_string(""));
+  json_object_object_add(meas, "value", json_object_new_int(pm_f.ulsch_bler));
   json_object_array_add(meas_array, meas);
   json_object *data_fields = json_object_new_object();
   json_object_object_add(data_fields, "operational-state", json_object_new_string("enabled"));
