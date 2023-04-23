@@ -36,5 +36,6 @@ typedef struct o1_agent_s {
 } o1_agent_t;
 
 o1_agent_t* o1_init_agent(const char* url, uint16_t report_interval);
-
+void o1_free_agent(o1_agent_t* ag);
+void o1_start_agent(o1_agent_t* ag);
 #endif

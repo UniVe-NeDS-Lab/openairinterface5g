@@ -105,7 +105,7 @@ json_object *gen_hb()
   time_t rawtime;
   time(&rawtime);
   char str_time[20];
-  sprintf(str_time, "%d", rawtime);
+  sprintf(str_time, "%ld", rawtime);
   json_object *heartbeat_fields = json_object_new_object();
   json_object_object_add(heartbeat_fields, "heartbeatFieldsVersion", json_object_new_string("3.0"));
   json_object_object_add(heartbeat_fields, "heartbeatInterval", json_object_new_int(20));
@@ -211,7 +211,7 @@ json_object *gen_pm(struct pm_fields pm_f)
   time_t rawtime;
   time(&rawtime);
   char str_time[20];
-  sprintf(str_time, "pm-1_%d", rawtime);
+  sprintf(str_time, "pm-1_%ld", rawtime);
   json_object_object_add(data_fields, "id", json_object_new_string(str_time));
   json_object_object_add(data_fields, "measurements", meas_array);
   json_object *event = json_object_new_object();

@@ -23,6 +23,7 @@
 #define O1_AGENT_API
 
 #include <stdint.h>
+#include "intertask_interface.h"
 
 typedef struct {
   const char *url;

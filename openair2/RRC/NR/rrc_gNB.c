@@ -3192,7 +3192,7 @@ void nr_rrc_subframe_process(protocol_ctxt_t *const ctxt_pP, const int CC_id) {
       if (UE->ul_failure_timer >= 20000) {
         // remove UE after 20 seconds after MAC (or else) has indicated UL failure
         LOG_I(RRC, "Removing UE %x instance, because of uplink failure timer timeout\n", UE->rnti);
-	/ extern instance_t DUuniqInstance;
+	// extern instance_t DUuniqInstance;
         // O1_RLC_FAIL(msg_p).size = sizeof(char) * 5;
         // O1_RLC_FAIL(msg_p).text = malloc(O1_RLC_FAIL(msg_p).size);
         // strcpy(O1_RLC_FAIL(msg_p).text, "Test");
