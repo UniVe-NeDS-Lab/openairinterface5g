@@ -42,3 +42,4 @@
 #include "udp_messages_def.h"
 #include "gtpv1_u_messages_def.h"
 #include "e1ap_messages_def.h"
+#include "o1_messages_def.h"

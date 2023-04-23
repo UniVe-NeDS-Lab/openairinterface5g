@@ -19,26 +19,38 @@
  *      contact@openairinterface.org
  */
 
-#ifndef MESSAGES_TYPES_H_
-#define MESSAGES_TYPES_H_
+#ifndef O1_json_h
+#define O1_json_h
 
-#include "intertask_messages_types.h"
-#include "timer_messages_types.h"
+#include <json-c/json.h>
+#include <curl/curl.h>
+#include <string.h>
+#include "o1_agent.h"
 
-#include "security_types.h"
+struct pm_fields {
+  int rnti;
+  uint64_t ngap_id;
+  int avg_rsrp;
+  int srs_wide_band_snr;
+  int dlsch_mcs;
+  int ulsch_mcs;
+  int cqi;
+  float dlsch_bler;
+  float ulsch_bler;
+  uint64_t ul_bytes;
+  uint64_t dl_bytes;
+};
 
-#include "gtpv1_u_messages_types.h"
-#include "ip_forward_messages_types.h"
-#include "s11_messages_types.h"
-#include "s1ap_messages_types.h"
-#include "nas_messages_types.h"
-#include "s6a_messages_types.h"
-#include "sctp_messages_types.h"
-#include "sgw_lite_messages_types.h"
-#include "udp_messages_types.h"
-#include "mme_app_messages_types.h"
-#include "m2ap_messages_types.h"
-#include "ngap_messages_types.h"
-#include "o1_messages_types.h"
+json_object *gen_head(char *domain, char *event_id, char *event_name, char *eventType, char *priority);
+json_object *gen_hb();
+json_object *my_gen_hb(o1_agent_t *ag);
+json_object *gen_fm();
+json_object *gen_pm();
+json_object *my_gen_pm(o1_agent_t *ag, struct pm_fields pm_f);
+json_object *my_gen_rlc_fail(o1_agent_t *ag, O1RlcFailMessage m);
+json_object *my_gen_ulsch_fail(o1_agent_t *ag, O1ulschFailMessage m);
+json_object *my_gen_rlc_complete(o1_agent_t *ag, O1RlcCompleteMessage m);
+json_object *gen_pnf();
+int o1_send_json(char *url, json_object *jo);
 
-#endif /* MESSAGES_TYPES_H_ */
+#endif

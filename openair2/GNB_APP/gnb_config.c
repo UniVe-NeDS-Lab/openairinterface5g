@@ -91,6 +91,7 @@
 #include "RRC/NR/nr_rrc_extern.h"
 #include "openair2/LAYER2/nr_pdcp/nr_pdcp.h"
 #include "nfapi/oai_integration/vendor_ext.h"
+#include "openair3/O1/agent/o1_agent_api.h"
 
 extern uint16_t sf_ahead;
 
@@ -2271,4 +2272,30 @@ ngran_node_t get_node_type(void)
   } else {
     return ngran_gNB;
   }
+}
+
+
+bool config_O1agent(o1_agent_args_t *args)
+{
+  paramdef_t o1agent_params[] = O1AGENT_PARAMS_DESC;
+  int ret = config_get(config_get_if(), o1agent_params, sizeof(o1agent_params) / sizeof(paramdef_t), CONFIG_STRING_O1AGENT);
+
+  // First set defaults
+  args->url = o1agent_config_url_default;
+  args->initial_sleep = o1agent_config_initial_sleep_default;
+  args->pm_period = o1agent_config_pm_period_default;
+  args->hb_period = o1agent_config_hb_period_default;
+
+  if (ret < 0) {
+    // If the section is missing do not enable? BUG: it starts anyhow.
+    LOG_W(GNB_APP, "configuration file does not contain a \"%s\" section, applying default parameters\n", CONFIG_STRING_O1AGENT);
+    return o1agent_config_enable_default;
+  }
+
+  //Override the default vals
+  args->url = *o1agent_params[O1AGENT_CONFIG_URL_IDX].strptr;
+  args->initial_sleep = *o1agent_params[O1AGENT_CONFIG_INITIAL_SLEEP_IDX].u16ptr;
+  args->pm_period = *o1agent_params[O1AGENT_CONFIG_PM_PERIOD_IDX].dblptr;
+  args->hb_period = *o1agent_params[O1AGENT_CONFIG_HB_PERIOD_IDX].dblptr;
+  return *o1agent_params[O1AGENT_CONFIG_ENABLE_IDX].iptr;
 }
