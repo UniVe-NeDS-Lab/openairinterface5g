@@ -19,26 +19,32 @@
  *      contact@openairinterface.org
  */
 
-#ifndef MESSAGES_TYPES_H_
-#define MESSAGES_TYPES_H_
+#ifndef O1_MESSAGES_TYPES_H_
+#define O1_MESSAGES_TYPES_H_
 
-#include "intertask_messages_types.h"
-#include "timer_messages_types.h"
+#include "MobileIdentity.h"
+#include "common/platform_types.h"
 
-#include "security_types.h"
+#define O1_RLC_FAILMSG(mSGpTR) (mSGpTR)->ittiMsg.o1_rlc_fail
+#define O1_RLC_COMPLETEMSG(mSGpTR) (mSGpTR)->ittiMsg.o1_rlc_complete
+#define O1_ULSCH_FAILMSG(mSGpTR) (mSGpTR)->ittiMsg.o1_ulsch_fail
 
-#include "gtpv1_u_messages_types.h"
-#include "ip_forward_messages_types.h"
-#include "s11_messages_types.h"
-#include "s1ap_messages_types.h"
-#include "nas_messages_types.h"
-#include "s6a_messages_types.h"
-#include "sctp_messages_types.h"
-#include "sgw_lite_messages_types.h"
-#include "udp_messages_types.h"
-#include "mme_app_messages_types.h"
-#include "m2ap_messages_types.h"
-#include "ngap_messages_types.h"
-#include "o1_messages_types.h"
+typedef struct O1RlcFailMessage_s {
+  ImsiMobileIdentity_t imsi;
+  rnti_t rntiP;
+  uint64_t ngap_id;
+} O1RlcFailMessage;
 
-#endif /* MESSAGES_TYPES_H_ */
+typedef struct O1RlcCompleteMessage_s {
+  ImsiMobileIdentity_t imsi;
+  rnti_t rntiP;
+  uint64_t ngap_id;
+} O1RlcCompleteMessage;
+
+typedef struct O1ulschFailMessage_s {
+  ImsiMobileIdentity_t imsi;
+  rnti_t rntiP;
+  uint64_t ngap_id;
+} O1ulschFailMessage;
+
+#endif /* O1_MESSAGES_TYPES_H_ */

@@ -1927,6 +1927,10 @@ set(CMAKE_MODULE_PATH "${OPENAIR_DIR}/cmake_targets/tools/MODULES" "${CMAKE_MODU
 #################################
 # add executables for operation
 #################################
+find_package (JSON-C REQUIRED)
+find_package(CURL REQUIRED) 
+
+
 add_library(minimal_lib
   ${OPENAIR_DIR}/common/utils/LOG/log.c
   ${OPENAIR_DIR}/common/utils/minimal_stub.c
@@ -2057,11 +2061,15 @@ add_executable(nr-softmodem
   ${OPENAIR_DIR}/executables/nr-gnb.c
   ${OPENAIR_DIR}/executables/nr-ru.c
   ${OPENAIR_DIR}/executables/nr-softmodem.c
+  ${OPENAIR_DIR}/openair3/O1/agent/o1_agent_api.c
+  ${OPENAIR_DIR}/openair3/O1/agent/o1_agent.c
+  ${OPENAIR_DIR}/openair3/O1/agent/o1_json.c
   ${OPENAIR_DIR}/executables/softmodem-common.c
   ${OPENAIR_DIR}/radio/COMMON/common_lib.c
   ${OPENAIR_DIR}/radio/COMMON/record_player.c
   ${OPENAIR2_DIR}/RRC/NAS/nas_config.c
   ${OPENAIR2_DIR}/RRC/NAS/rb_config.c
+  ${OPENAIR2_DIR}/GNB_APP/gnb_config.c
   ${OPENAIR_DIR}/common/utils/lte/ue_power.c
   ${OPENAIR_DIR}/common/utils/lte/prach_utils.c
   ${OPENAIR_DIR}/common/utils/nr/nr_common.c
@@ -2085,6 +2093,10 @@ if(E2_AGENT)
   target_compile_definitions(nr-softmodem PRIVATE ${E2AP_VERSION} ${KPM_VERSION})
 endif()
 
+target_link_libraries (nr-softmodem PRIVATE ${JSON-C_LIBRARIES})
+target_link_libraries (nr-softmodem PRIVATE ${CURL_LIBRARIES})
+target_link_libraries (nr-softmodem PUBLIC event)
+add_dependencies( nr-softmodem ldpc_orig ldpc_optim ldpc_optim8seg ldpc)
 
 add_dependencies(nr-softmodem ldpc_orig ldpc_optim ldpc_optim8seg ldpc)
 

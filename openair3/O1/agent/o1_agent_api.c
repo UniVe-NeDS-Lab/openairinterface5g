@@ -19,26 +19,36 @@
  *      contact@openairinterface.org
  */
 
-#ifndef MESSAGES_TYPES_H_
-#define MESSAGES_TYPES_H_
+#include "o1_agent_api.h"
+#include "o1_agent.h"
+#include <pthread.h>
 
-#include "intertask_messages_types.h"
-#include "timer_messages_types.h"
+static o1_agent_t* agent = NULL;
 
-#include "security_types.h"
+// static pthread_t thrd_agent;
 
-#include "gtpv1_u_messages_types.h"
-#include "ip_forward_messages_types.h"
-#include "s11_messages_types.h"
-#include "s1ap_messages_types.h"
-#include "nas_messages_types.h"
-#include "s6a_messages_types.h"
-#include "sctp_messages_types.h"
-#include "sgw_lite_messages_types.h"
-#include "udp_messages_types.h"
-#include "mme_app_messages_types.h"
-#include "m2ap_messages_types.h"
-#include "ngap_messages_types.h"
-#include "o1_messages_types.h"
+static inline void* static_start_agent(void* a)
+{ // Blocking...
+  o1_start_agent(agent);
+  return NULL;
+}
 
-#endif /* MESSAGES_TYPES_H_ */
+void init_o1_agent_api(o1_agent_args_t const* args)
+{
+  assert(agent == NULL);
+  agent = o1_init_agent(args->url, args->initial_sleep, args->hb_period, args->pm_period);
+  // Spawn a new thread for the agent
+  // const int rc = pthread_create(&thrd_agent, NULL, static_start_agent, NULL);
+  // alternative using itti task:
+  const int rc = itti_create_task(TASK_O1, static_start_agent, NULL);
+  assert(rc == 0);
+}
+
+void stop_o1_agent_api(void)
+{
+  assert(agent != NULL);
+  o1_free_agent(agent);
+  itti_terminate_tasks(TASK_O1);
+  //   int const rc = pthread_join(thrd_agent, NULL);
+  //   assert(rc == 0);
+}

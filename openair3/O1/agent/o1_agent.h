@@ -19,26 +19,41 @@
  *      contact@openairinterface.org
  */
 
-#ifndef MESSAGES_TYPES_H_
-#define MESSAGES_TYPES_H_
+#ifndef O1_AGENT_H
+#define O1_AGENT_H
 
-#include "intertask_messages_types.h"
-#include "timer_messages_types.h"
+#include <stdatomic.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include "PHY/defs_nr_UE.h"
+#include "openair2/LAYER2/NR_MAC_gNB/mac_proto.h"
+#include "intertask_interface.h"
+#include "event2/event.h"
 
-#include "security_types.h"
+typedef struct o1_agent_s {
+  char* url;
+  char hostname[1025];
+  float hb_period;
+  float pm_period;
+  int initial_sleep;
 
-#include "gtpv1_u_messages_types.h"
-#include "ip_forward_messages_types.h"
-#include "s11_messages_types.h"
-#include "s1ap_messages_types.h"
-#include "nas_messages_types.h"
-#include "s6a_messages_types.h"
-#include "sctp_messages_types.h"
-#include "sgw_lite_messages_types.h"
-#include "udp_messages_types.h"
-#include "mme_app_messages_types.h"
-#include "m2ap_messages_types.h"
-#include "ngap_messages_types.h"
-#include "o1_messages_types.h"
+  atomic_bool agent_stopped;
+  struct event_base* ev_base;
+} o1_agent_t;
 
-#endif /* MESSAGES_TYPES_H_ */
+// API
+o1_agent_t* o1_init_agent(const char* url, uint16_t initial_sleep, double hb_period, double pm_period);
+void o1_free_agent(o1_agent_t* ag);
+void o1_start_agent(o1_agent_t* ag);
+
+// Callbacks
+void o1_send_pm(int fd, short event, void* arg);
+void o1_send_hb(int fd, short event, void* arg);
+void o1_handle_itti(int fd, short event, void* arg);
+
+// misc
+struct timeval seconds_to_timeval(float time);
+void o1_rrc_fail(rnti_t rnti, uint64_t ngap_id);
+void o1_ulsch_fail(rnti_t rnti, uint64_t ngap_id);
+
+#endif

@@ -19,26 +19,14 @@
  *      contact@openairinterface.org
  */
 
-#ifndef MESSAGES_TYPES_H_
-#define MESSAGES_TYPES_H_
+/*
+ * o1_messages_def.h
+ *
+ *  Created on: 2023
+ *      Author: Gabriele Gemmi
+ *      Email: gabriele.gemmi@unive.it
+ */
 
-#include "intertask_messages_types.h"
-#include "timer_messages_types.h"
-
-#include "security_types.h"
-
-#include "gtpv1_u_messages_types.h"
-#include "ip_forward_messages_types.h"
-#include "s11_messages_types.h"
-#include "s1ap_messages_types.h"
-#include "nas_messages_types.h"
-#include "s6a_messages_types.h"
-#include "sctp_messages_types.h"
-#include "sgw_lite_messages_types.h"
-#include "udp_messages_types.h"
-#include "mme_app_messages_types.h"
-#include "m2ap_messages_types.h"
-#include "ngap_messages_types.h"
-#include "o1_messages_types.h"
-
-#endif /* MESSAGES_TYPES_H_ */
+MESSAGE_DEF(O1_RLC_FAIL, MESSAGE_PRIORITY_MED, O1RlcFailMessage, o1_rlc_fail)
+MESSAGE_DEF(O1_RLC_COMPLETE, MESSAGE_PRIORITY_MED, O1RlcCompleteMessage, o1_rlc_complete)
+MESSAGE_DEF(O1_ULSCH_FAIL, MESSAGE_PRIORITY_MED, O1ulschFailMessage, o1_ulsch_fail)

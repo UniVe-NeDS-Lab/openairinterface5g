@@ -19,26 +19,20 @@
  *      contact@openairinterface.org
  */
 
-#ifndef MESSAGES_TYPES_H_
-#define MESSAGES_TYPES_H_
+#ifndef O1_AGENT_API
+#define O1_AGENT_API
 
-#include "intertask_messages_types.h"
-#include "timer_messages_types.h"
+#include <stdint.h>
+#include "intertask_interface.h"
 
-#include "security_types.h"
+typedef struct {
+  char *url;
+  uint16_t initial_sleep;
+  float hb_period;
+  float pm_period;
+} o1_agent_args_t;
 
-#include "gtpv1_u_messages_types.h"
-#include "ip_forward_messages_types.h"
-#include "s11_messages_types.h"
-#include "s1ap_messages_types.h"
-#include "nas_messages_types.h"
-#include "s6a_messages_types.h"
-#include "sctp_messages_types.h"
-#include "sgw_lite_messages_types.h"
-#include "udp_messages_types.h"
-#include "mme_app_messages_types.h"
-#include "m2ap_messages_types.h"
-#include "ngap_messages_types.h"
-#include "o1_messages_types.h"
+void init_o1_agent_api(o1_agent_args_t const *args);
+void stop_o1_agent_api(void);
 
-#endif /* MESSAGES_TYPES_H_ */
+#endif
