@@ -78,6 +78,7 @@ unsigned short config_frames[4] = {2,9,11,13};
 #include "gnb_paramdef.h"
 #include <openair3/ocp-gtpu/gtp_itf.h>
 #include "nfapi/oai_integration/vendor_ext.h"
+#include "openair3/O1/agent/o1_agent_api.h"
 #include "gnb_config.h"
 #include "openair2/E1AP/e1ap_common.h"
 #include "openair2/E1AP/e1ap_api.h"
@@ -356,6 +357,13 @@ static int create_gNB_tasks(void) {
       }
     } else {
       LOG_I(X2AP, "X2AP is disabled.\n");
+    }
+
+    o1_agent_args_t args = {0};
+    if (config_O1agent(&args)) {
+      LOG_E(O1, "Starting O1 Reporting task\n");
+      LOG_E(O1, "url: %s\n", args.url);
+      init_o1_agent_api(&args);
     }
   }
 

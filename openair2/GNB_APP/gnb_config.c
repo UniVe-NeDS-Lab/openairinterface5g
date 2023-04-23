@@ -88,6 +88,7 @@
 #include "RRC/NR/nr_rrc_extern.h"
 #include "openair2/LAYER2/nr_pdcp/nr_pdcp.h"
 #include "nfapi/oai_integration/vendor_ext.h"
+#include "openair3/O1/agent/o1_agent_api.h"
 
 extern uint16_t sf_ahead;
 int macrlc_has_f1 = 0;
@@ -2250,4 +2251,20 @@ void nr_read_config_and_init(void) {
   if (NODE_IS_CU(RC.nrrrc[0]->node_type) && RC.nrrrc[0]->node_type != ngran_gNB_CUCP) {
     nr_pdcp_layer_init();
   }
+}
+
+
+bool config_O1agent(o1_agent_args_t *args)
+{
+  paramdef_t o1agent_params[] = O1AGENT_PARAMS_DESC;
+  int ret = config_get(o1agent_params, sizeof(o1agent_params) / sizeof(paramdef_t), CONFIG_STRING_O1AGENT);
+  if (ret < 0) {
+    LOG_W(GNB_APP, "configuration file does not contain a \"%s\" section, applying default parameters\n", CONFIG_STRING_O1AGENT);
+    args->url = o1agent_config_url_default;
+    args->report_interval = e2agent_config_report_interval_default;
+    return o1agent_config_enable_default;
+  }
+  args->url = *o1agent_params[O1AGENT_CONFIG_URL_IDX].strptr;
+  args->report_interval = *o1agent_params[O1AGENT_CONFIG_REPORT_INTERVAL_IDX].u16ptr;
+  return *o1agent_params[O1AGENT_CONFIG_ENABLE_IDX].iptr;
 }
