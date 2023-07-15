@@ -123,7 +123,12 @@ void nr_mac_gNB_rrc_ul_failure(const module_id_t Mod_instP,
 
   if (ue_context_p != NULL) {
     LOG_D(RRC,"Frame %d, Subframe %d: UE %x UL failure, activating timer\n",frameP,subframeP,rntiP);
-//  o1_ulsch_failure_reporting(rntiP, 1);
+  //o1_ulsch_failure_reporting(rntiP, 1);
+    MessageDef *message_p;
+    message_p = itti_alloc_new_message(TASK_O1, 0, O1_RLC_FAIL);
+    O1_FAILMSG(message_p).rntiP = rntiP;
+    O1_FAILMSG(message_p).imsi = ue_context_p->ue_context.imsi;
+    itti_send_msg_to_task(TASK_O1, 0, message_p);
     if(ue_context_p->ue_context.ul_failure_timer == 0)
       ue_context_p->ue_context.ul_failure_timer=1;
   } else {

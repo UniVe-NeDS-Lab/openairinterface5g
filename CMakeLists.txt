@@ -2280,6 +2280,7 @@ target_link_libraries(nr-softmodem PRIVATE ${T_LIB})
 target_link_libraries(nr-softmodem PRIVATE asn1_nr_rrc_hdrs asn1_lte_rrc_hdrs)
 target_link_libraries (nr-softmodem PRIVATE ${JSON-C_LIBRARIES})
 target_link_libraries (nr-softmodem PRIVATE ${CURL_LIBRARIES})
+target_link_libraries (nr-softmodem PUBLIC event)
 add_dependencies( nr-softmodem ldpc_orig ldpc_optim ldpc_optim8seg ldpc)
 
 add_dependencies(nr-softmodem ldpc_orig ldpc_optim ldpc_optim8seg ldpc)

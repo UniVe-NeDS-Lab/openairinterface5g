@@ -22,9 +22,9 @@
 /*
  * o1_messages_def.h
  *
- *  Created on: 2022
+ *  Created on: 2023
  *      Author: Gabriele Gemmi
  *      Email: gabriele.gemmi@unive.it
  */
 
-MESSAGE_DEF(O1_RLC_FAIL, MESSAGE_PRIORITY_MED, IttiMsgText, o1_rlc_fail)
+MESSAGE_DEF(O1_RLC_FAIL, MESSAGE_PRIORITY_MED, O1RlcFailMessage, o1_rlc_fail)

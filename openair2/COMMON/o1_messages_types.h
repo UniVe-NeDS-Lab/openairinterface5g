@@ -19,40 +19,17 @@
  *      contact@openairinterface.org
  */
 
-#ifndef O1_AGENT_H
-#define O1_AGENT_H
+#ifndef O1_MESSAGES_TYPES_H_
+#define O1_MESSAGES_TYPES_H_
 
-#include <stdatomic.h>
-#include <stdbool.h>
-#include <stdint.h>
-#include "PHY/defs_nr_UE.h"
-#include "openair2/LAYER2/NR_MAC_gNB/mac_proto.h"
-#include "o1_json.h"
-#include "intertask_interface.h"
-#include "event2/event.h"
+#include "MobileIdentity.h"
+#include "platform_types.h"
 
-typedef struct o1_agent_s {
-  const char* url;
-  float hb_period;
-  float pm_period;
-  int initial_sleep;
+#define O1_FAILMSG(mSGpTR) (mSGpTR)->ittiMsg.o1_rlc_fail
 
-  uint16_t report_interval;
-  atomic_bool agent_stopped;
-  struct event_base* ev_base;
-} o1_agent_t;
+typedef struct O1RlcFailMessage_s {
+  ImsiMobileIdentity_t imsi;
+  rnti_t rntiP;
+} O1RlcFailMessage;
 
-// API
-o1_agent_t* o1_init_agent(const char* url, uint16_t report_interval);
-void o1_free_agent(o1_agent_t* ag);
-void o1_start_agent(o1_agent_t* ag);
-
-// Callbacks
-void o1_send_pm(int fd, short event, void* arg);
-void o1_send_hb(int fd, short event, void* arg);
-void o1_handle_itti(int fd, short event, void* arg);
-
-// misc
-struct timeval seconds_to_timeval(float time);
-
-#endif
+#endif /* O1_MESSAGES_TYPES_H_ */
