@@ -30,6 +30,7 @@
 typedef struct O1RlcFailMessage_s {
   ImsiMobileIdentity_t imsi;
   rnti_t rntiP;
+  uint64_t ngap_id;
 } O1RlcFailMessage;
 
 #endif /* O1_MESSAGES_TYPES_H_ */

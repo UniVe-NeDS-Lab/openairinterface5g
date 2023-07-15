@@ -138,7 +138,6 @@ void o1_start_agent(o1_agent_t* ag)
         case O1_RLC_FAIL:
           printf("O1: Received O1_RLC_FAIL msg \n\n");
           O1RlcFailMessage m = O1_FAILMSG(msg);
-          printf("%p", &(m.imsi));
           o1_send_json(ag->url, gen_fm());
           break;
         default:
@@ -148,4 +147,15 @@ void o1_start_agent(o1_agent_t* ag)
     }
   }
   return;
+}
+
+
+
+void o1_rrc_fail(rnti_t rnti, uint64_t ngap_id){
+  MessageDef *message_p;
+  message_p = itti_alloc_new_message(TASK_O1, 0, O1_RLC_FAIL);
+  O1_FAILMSG(message_p).rntiP = rnti;
+  O1_FAILMSG(message_p).ngap_id = ngap_id;
+  //O1_FAILMSG(message_p).imsi = ue_context_p->ue_context.imsi;
+  itti_send_msg_to_task(TASK_O1, 0, message_p);
 }

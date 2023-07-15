@@ -54,5 +54,5 @@ void o1_handle_itti(int fd, short event, void* arg);
 
 // misc
 struct timeval seconds_to_timeval(float time);
-
+void o1_rrc_fail(rnti_t rnti, uint64_t ngap_id);
 #endif
