@@ -3245,7 +3245,7 @@ void nr_rrc_subframe_process(protocol_ctxt_t *const ctxt_pP, const int CC_id) {
         rrc_rlc_remove_ue(ctxt_pP);
         nr_pdcp_remove_UE(ctxt_pP->rntiMaybeUEid);
         newGtpuDeleteAllTunnels(ctxt_pP->instance, UE->rnti);
-        o1_rrc_fail(UE->rnti);
+        o1_rrc_fail(UE->rnti, UE->amf_ue_ngap_id);
         /* remove RRC UE Context */
         LOG_I(NR_RRC, "remove UE %04x \n", UE->rnti);
 
