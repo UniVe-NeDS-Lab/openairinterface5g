@@ -48,9 +48,9 @@ int o1_send_json(char *url, json_object *jo)
   headers = curl_slist_append(headers, "Accept: application/json");
   headers = curl_slist_append(headers, "Content-Type: application/json");
   headers = curl_slist_append(headers, "charset: utf-8");
-  char *credentials = 0;
-  asprintf(&credentials, "%s:%s", "sample1", "sample1");
-  curl_easy_setopt(curl, CURLOPT_USERPWD, credentials);
+  // char *credentials = 0;
+  // asprintf(&credentials, "%s:%s", "sample1", "sample1");
+  // curl_easy_setopt(curl, CURLOPT_USERPWD, credentials);
   curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
   curl_easy_setopt(curl, CURLOPT_URL, url);
   curl_easy_setopt(curl, CURLOPT_TIMEOUT, 1L);
@@ -73,6 +73,81 @@ int o1_send_json(char *url, json_object *jo)
   curl_global_cleanup();
   curl = NULL;
   return 0;
+}
+
+json_object *my_gen_hb(o1_agent_t *ag)
+{
+  time_t rawtime;
+  time(&rawtime);
+  char str_time[20];
+  sprintf(str_time, "%ld", rawtime);
+  json_object *heartbeat_fields = json_object_new_object();
+  json_object_object_add(heartbeat_fields, "heartbeatInterval", json_object_new_double(ag->hb_period));
+  json_object_object_add(heartbeat_fields, "eventTime", json_object_new_string(str_time));
+  json_object *root = json_object_new_object();
+  json_object_object_add(root, "content", heartbeat_fields);
+  json_object_object_add(root, "type", json_object_new_string("HeartBeat"));
+  json_object_object_add(root, "hostname", json_object_new_string(ag->hostname));
+  json_object_object_add(root, "sequence", json_object_new_int(++o1_seqn));
+  return root;
+}
+
+json_object *my_gen_rlc_fail(o1_agent_t *ag, O1RlcFailMessage m)
+{
+  time_t rawtime;
+  time(&rawtime);
+  char str_time[20];
+  sprintf(str_time, "%ld", rawtime);
+  json_object *failure_fields = json_object_new_object();
+  json_object_object_add(failure_fields, "failure", json_object_new_string("RLC"));
+  json_object_object_add(failure_fields, "rntiP", json_object_new_uint64(m.rntiP));
+  json_object_object_add(failure_fields, "ngapId", json_object_new_uint64(m.ngap_id));
+  json_object_object_add(failure_fields, "eventTime", json_object_new_string(str_time));
+  json_object *root = json_object_new_object();
+  json_object_object_add(root, "content", failure_fields);
+  json_object_object_add(root, "type", json_object_new_string("FailureMessage"));
+  json_object_object_add(root, "hostname", json_object_new_string(ag->hostname));
+  json_object_object_add(root, "sequence", json_object_new_int(++o1_seqn));
+  return root;
+}
+
+json_object *my_gen_ulsch_fail(o1_agent_t *ag, O1ulschFailMessage m)
+{
+  time_t rawtime;
+  time(&rawtime);
+  char str_time[20];
+  sprintf(str_time, "%ld", rawtime);
+  json_object *failure_fields = json_object_new_object();
+  json_object_object_add(failure_fields, "failure", json_object_new_string("ULSCH"));
+  json_object_object_add(failure_fields, "rntiP", json_object_new_uint64(m.rntiP));
+  json_object_object_add(failure_fields, "ngapId", json_object_new_uint64(m.ngap_id));
+  json_object_object_add(failure_fields, "eventTime", json_object_new_string(str_time));
+  json_object *root = json_object_new_object();
+  json_object_object_add(root, "content", failure_fields);
+  json_object_object_add(root, "type", json_object_new_string("FailureMessage"));
+  json_object_object_add(root, "hostname", json_object_new_string(ag->hostname));
+  json_object_object_add(root, "sequence", json_object_new_int(++o1_seqn));
+  return root;
+}
+
+json_object *my_gen_pm(o1_agent_t *ag, struct pm_fields pm_f)
+{
+  json_object *meas = json_object_new_object();
+  json_object_object_add(meas, "rnti", json_object_new_int(pm_f.rnti));
+  json_object_object_add(meas, "ngapId", json_object_new_uint64(pm_f.ngap_id));
+  json_object_object_add(meas, "avg_rsrp", json_object_new_int(pm_f.avg_rsrp));
+  json_object_object_add(meas, "cqi", json_object_new_int(pm_f.cqi));
+  json_object_object_add(meas, "dlsch_bler", json_object_new_double(pm_f.dlsch_bler));
+  json_object_object_add(meas, "ulsch_bler", json_object_new_double(pm_f.ulsch_bler));
+  json_object_object_add(meas, "srs_wide_band_snr", json_object_new_int(pm_f.srs_wide_band_snr));
+  json_object_object_add(meas, "ulsch_mcs", json_object_new_int(pm_f.ulsch_mcs));
+  json_object_object_add(meas, "dlsch_mcs", json_object_new_int(pm_f.dlsch_mcs));
+  json_object *root = json_object_new_object();
+  json_object_object_add(root, "content", meas);
+  json_object_object_add(root, "type", json_object_new_string("PerformanceMessage"));
+  json_object_object_add(root, "hostname", json_object_new_string(ag->hostname));
+  json_object_object_add(root, "sequence", json_object_new_int(++o1_seqn));
+  return root;
 }
 
 json_object *gen_head(char *domain, char *event_id, char *event_name, char *eventType, char *priority)
@@ -102,6 +177,8 @@ json_object *gen_head(char *domain, char *event_id, char *event_name, char *even
   }
   return common_head;
 }
+
+// Proper format for ONAP
 
 json_object *gen_hb()
 {

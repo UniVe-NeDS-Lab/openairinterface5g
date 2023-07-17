@@ -20,6 +20,8 @@
  */
 
 #include "o1_agent.h"
+#include "o1_json.h"
+#include "openair2/RRC/NR/nr_rrc_defs.h"
 
 extern RAN_CONTEXT_t RC;
 
@@ -35,6 +37,8 @@ o1_agent_t* o1_init_agent(const char* url, uint16_t initial_sleep, double hb_per
   ag->initial_sleep = initial_sleep;
   ag->hb_period = hb_period;
   ag->pm_period = pm_period;
+  ag->hostname[1023] = '\0';
+  gethostname(ag->hostname, 1023);
   strcpy(ag->url, url);
   return ag;
 }
@@ -54,7 +58,7 @@ void o1_send_hb(int fd, short event, void* arg)
 {
   o1_agent_t* ag = (o1_agent_t*)arg;
   printf("O1: Sending HB\n\n");
-  o1_send_json(ag->url, gen_hb());
+  o1_send_json(ag->url, my_gen_hb(ag));
 }
 
 void o1_send_pm(int fd, short event, void* arg)
@@ -84,7 +88,15 @@ void o1_send_pm(int fd, short event, void* arg)
     }
     for (int ueIndex = 0; ueIndex < MAX_MOBILES_PER_GNB + 1; ueIndex++) {
       if (pmf[ueIndex].rnti) {
-        o1_send_json(ag->url, gen_pm(pmf[ueIndex]));
+        // We ned to get the UE Context to retrieve the ngap_id
+        // 0 is hardcoded, hopefully it doesn't break
+        // volatile rrc_gNB_ue_context_t* ue_context_p = rrc_gNB_get_ue_context_by_rnti(RC.nrrrc[0], pmf[ueIndex].rnti);
+        // if (ue_context_p != NULL) {
+        //   printf("%d", ue_context_p->ue_context.amf_ue_ngap_id);
+        //   pmf[ueIndex].ngap_id = ue_context_p->ue_context.amf_ue_ngap_id;
+        //   printf("%d", ue_context_p->ue_context.amf_ue_ngap_id);
+        // }
+        o1_send_json(ag->url, my_gen_pm(ag, pmf[ueIndex]));
       }
     }
   }
@@ -109,7 +121,7 @@ void o1_start_agent(o1_agent_t* ag)
   sleep(ag->initial_sleep);
 
   // Send PNF message
-  o1_send_json(ag->url, gen_pnf());
+  // o1_send_json(ag->url, gen_pnf());
 
   // Set periodic event to send Heartbeats Messages
   struct event* hb_ev;
@@ -135,12 +147,17 @@ void o1_start_agent(o1_agent_t* ag)
     if (msg != NULL) {
       switch (ITTI_MSG_ID(msg)) {
         case O1_RLC_FAIL:
-          printf("O1: Received O1_RLC_FAIL msg \n\n");
-          O1RlcFailMessage m = O1_FAILMSG(msg);
-          o1_send_json(ag->url, gen_fm());
+          printf("O1: Received O1_RLC_FAIL msg \n");
+          O1RlcFailMessage m_rlc = O1_RLC_FAILMSG(msg);
+          o1_send_json(ag->url, my_gen_rlc_fail(ag, m_rlc));
+          break;
+        case O1_ULSCH_FAIL:
+          printf("O1: Received O1 ULSCH Fail mgs \n");
+          O1ulschFailMessage m_ul = O1_ULSCH_FAILMSG(msg);
+          o1_send_json(ag->url, my_gen_ulsch_fail(ag, m_ul));
           break;
         default:
-          printf("O1: Received unhandled msg \n\n");
+          printf("O1: Received unhandled msg \n");
       }
       itti_free(TASK_O1, msg);
     }
@@ -152,8 +169,17 @@ void o1_rrc_fail(rnti_t rnti, uint64_t ngap_id)
 {
   MessageDef* message_p;
   message_p = itti_alloc_new_message(TASK_O1, 0, O1_RLC_FAIL);
-  O1_FAILMSG(message_p).rntiP = rnti;
-  O1_FAILMSG(message_p).ngap_id = ngap_id;
+  O1_RLC_FAILMSG(message_p).rntiP = rnti;
+  O1_RLC_FAILMSG(message_p).ngap_id = ngap_id;
   // O1_FAILMSG(message_p).imsi = ue_context_p->ue_context.imsi;
+  itti_send_msg_to_task(TASK_O1, 0, message_p);
+}
+
+void o1_ulsch_fail(rnti_t rnti, uint64_t ngap_id)
+{
+  MessageDef* message_p;
+  message_p = itti_alloc_new_message(TASK_O1, 0, O1_ULSCH_FAIL);
+  O1_ULSCH_FAILMSG(message_p).rntiP = rnti;
+  O1_ULSCH_FAILMSG(message_p).ngap_id = ngap_id;
   itti_send_msg_to_task(TASK_O1, 0, message_p);
 }

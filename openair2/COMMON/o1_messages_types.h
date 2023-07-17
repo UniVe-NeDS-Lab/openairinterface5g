@@ -25,12 +25,19 @@
 #include "MobileIdentity.h"
 #include "platform_types.h"
 
-#define O1_FAILMSG(mSGpTR) (mSGpTR)->ittiMsg.o1_rlc_fail
+#define O1_RLC_FAILMSG(mSGpTR) (mSGpTR)->ittiMsg.o1_rlc_fail
+#define O1_ULSCH_FAILMSG(mSGpTR) (mSGpTR)->ittiMsg.o1_ulsch_fail
 
 typedef struct O1RlcFailMessage_s {
   ImsiMobileIdentity_t imsi;
   rnti_t rntiP;
   uint64_t ngap_id;
 } O1RlcFailMessage;
+
+typedef struct O1ulschFailMessage_s {
+  ImsiMobileIdentity_t imsi;
+  rnti_t rntiP;
+  uint64_t ngap_id;
+} O1ulschFailMessage;
 
 #endif /* O1_MESSAGES_TYPES_H_ */

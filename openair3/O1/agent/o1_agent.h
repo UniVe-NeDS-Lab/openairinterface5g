@@ -27,12 +27,12 @@
 #include <stdint.h>
 #include "PHY/defs_nr_UE.h"
 #include "openair2/LAYER2/NR_MAC_gNB/mac_proto.h"
-#include "o1_json.h"
 #include "intertask_interface.h"
 #include "event2/event.h"
 
 typedef struct o1_agent_s {
   char* url;
+  char hostname[1025];
   float hb_period;
   float pm_period;
   int initial_sleep;
@@ -54,4 +54,6 @@ void o1_handle_itti(int fd, short event, void* arg);
 // misc
 struct timeval seconds_to_timeval(float time);
 void o1_rrc_fail(rnti_t rnti, uint64_t ngap_id);
+void o1_ulsch_fail(rnti_t rnti, uint64_t ngap_id);
+
 #endif

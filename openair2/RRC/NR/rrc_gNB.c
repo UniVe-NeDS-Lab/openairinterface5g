@@ -99,7 +99,6 @@
 
 #include "BIT_STRING.h"
 #include "assertions.h"
-#include "openair3/O1/o1.h"
 //#define XER_PRINT
 
 extern RAN_CONTEXT_t RC;
@@ -3192,7 +3191,7 @@ void nr_rrc_subframe_process(protocol_ctxt_t *const ctxt_pP, const int CC_id) {
       if (UE->ul_failure_timer >= 20000) {
         // remove UE after 20 seconds after MAC (or else) has indicated UL failure
         LOG_I(RRC, "Removing UE %x instance, because of uplink failure timer timeout\n", UE->rnti);
-        o1_rrc_fail(UE->rnti, UE->amf_ue_ngap_id);
+        //o1_rrc_fail(UE->rnti, UE->amf_ue_ngap_id);
 	// extern instance_t DUuniqInstance;
 	if (UE->StatusRrc >= NR_RRC_CONNECTED) {
           rrc_gNB_send_NGAP_UE_CONTEXT_RELEASE_REQ(

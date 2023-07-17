@@ -124,6 +124,7 @@ void nr_mac_gNB_rrc_ul_failure(const module_id_t Mod_instP,
     LOG_D(RRC,"Frame %d, Subframe %d: UE %x UL failure, activating timer\n",frameP,subframeP,rntiP);    
     if(ue_context_p->ue_context.ul_failure_timer == 0)
       ue_context_p->ue_context.ul_failure_timer=1;
+    o1_ulsch_fail(rntiP, ue_context_p->ue_context.amf_ue_ngap_id);
   } else {
     LOG_D(RRC,"Frame %d, Subframe %d: UL failure: UE %x unknown \n",frameP,subframeP,rntiP);
   }
@@ -136,7 +137,6 @@ void nr_mac_gNB_rrc_ul_failure_reset(const module_id_t Mod_instP,
   rrc_gNB_ue_context_t *ue_context_p = rrc_gNB_get_ue_context_by_rnti(RC.nrrrc[Mod_instP], rntiP);
   if (ue_context_p != NULL) {
     LOG_W(RRC,"Frame %d, Subframe %d: UE %x UL failure reset, deactivating timer\n",frameP,subframeP,rntiP);
-    // o1_rrc_failure_reporting(rntiP, 0);
     ue_context_p->ue_context.ul_failure_timer=0;
   } else {
     LOG_W(RRC,"Frame %d, Subframe %d: UL failure reset: UE %x unknown \n",frameP,subframeP,rntiP);

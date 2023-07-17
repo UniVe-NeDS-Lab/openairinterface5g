@@ -25,16 +25,11 @@
 #include <json-c/json.h>
 #include <curl/curl.h>
 #include <string.h>
-
-json_object *gen_head(char *domain, char *event_id, char *event_name, char *eventType, char *priority);
-json_object *gen_hb();
-json_object *gen_fm();
-json_object *gen_pm();
-json_object *gen_pnf();
-int o1_send_json(char *url, json_object *jo);
+#include "o1_agent.h"
 
 struct pm_fields {
   int rnti;
+  uint64_t ngap_id;
   int avg_rsrp;
   int srs_wide_band_snr;
   int dlsch_mcs;
@@ -43,5 +38,16 @@ struct pm_fields {
   float dlsch_bler;
   float ulsch_bler;
 };
+
+json_object *gen_head(char *domain, char *event_id, char *event_name, char *eventType, char *priority);
+json_object *gen_hb();
+json_object *my_gen_hb(o1_agent_t *ag);
+json_object *gen_fm();
+json_object *gen_pm();
+json_object *my_gen_pm(o1_agent_t *ag, struct pm_fields pm_f);
+json_object *my_gen_rlc_fail(o1_agent_t *ag, O1RlcFailMessage m);
+json_object *my_gen_ulsch_fail(o1_agent_t *ag, O1ulschFailMessage m);
+json_object *gen_pnf();
+int o1_send_json(char *url, json_object *jo);
 
 #endif
