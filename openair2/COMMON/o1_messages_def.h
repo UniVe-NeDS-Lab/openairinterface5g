@@ -28,4 +28,5 @@
  */
 
 MESSAGE_DEF(O1_RLC_FAIL, MESSAGE_PRIORITY_MED, O1RlcFailMessage, o1_rlc_fail)
+MESSAGE_DEF(O1_RLC_COMPLETE, MESSAGE_PRIORITY_MED, O1RlcCompleteMessage, o1_rlc_complete)
 MESSAGE_DEF(O1_ULSCH_FAIL, MESSAGE_PRIORITY_MED, O1ulschFailMessage, o1_ulsch_fail)

@@ -47,6 +47,7 @@ json_object *gen_pm();
 json_object *my_gen_pm(o1_agent_t *ag, struct pm_fields pm_f);
 json_object *my_gen_rlc_fail(o1_agent_t *ag, O1RlcFailMessage m);
 json_object *my_gen_ulsch_fail(o1_agent_t *ag, O1ulschFailMessage m);
+json_object *my_gen_rlc_complete(o1_agent_t *ag, O1RlcCompleteMessage m);
 json_object *gen_pnf();
 int o1_send_json(char *url, json_object *jo);
 

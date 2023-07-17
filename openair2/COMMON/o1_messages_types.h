@@ -26,6 +26,7 @@
 #include "platform_types.h"
 
 #define O1_RLC_FAILMSG(mSGpTR) (mSGpTR)->ittiMsg.o1_rlc_fail
+#define O1_RLC_COMPLETEMSG(mSGpTR) (mSGpTR)->ittiMsg.o1_rlc_complete
 #define O1_ULSCH_FAILMSG(mSGpTR) (mSGpTR)->ittiMsg.o1_ulsch_fail
 
 typedef struct O1RlcFailMessage_s {
@@ -33,6 +34,12 @@ typedef struct O1RlcFailMessage_s {
   rnti_t rntiP;
   uint64_t ngap_id;
 } O1RlcFailMessage;
+
+typedef struct O1RlcCompleteMessage_s {
+  ImsiMobileIdentity_t imsi;
+  rnti_t rntiP;
+  uint64_t ngap_id;
+} O1RlcCompleteMessage;
 
 typedef struct O1ulschFailMessage_s {
   ImsiMobileIdentity_t imsi;

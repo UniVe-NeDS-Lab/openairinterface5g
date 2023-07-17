@@ -99,7 +99,7 @@ json_object *my_gen_rlc_fail(o1_agent_t *ag, O1RlcFailMessage m)
   char str_time[20];
   sprintf(str_time, "%ld", rawtime);
   json_object *failure_fields = json_object_new_object();
-  json_object_object_add(failure_fields, "failure", json_object_new_string("RLC"));
+  json_object_object_add(failure_fields, "content", json_object_new_string("RLC Failure"));
   json_object_object_add(failure_fields, "rntiP", json_object_new_uint64(m.rntiP));
   json_object_object_add(failure_fields, "ngapId", json_object_new_uint64(m.ngap_id));
   json_object_object_add(failure_fields, "eventTime", json_object_new_string(str_time));
@@ -118,13 +118,32 @@ json_object *my_gen_ulsch_fail(o1_agent_t *ag, O1ulschFailMessage m)
   char str_time[20];
   sprintf(str_time, "%ld", rawtime);
   json_object *failure_fields = json_object_new_object();
-  json_object_object_add(failure_fields, "failure", json_object_new_string("ULSCH"));
+  json_object_object_add(failure_fields, "content", json_object_new_string("ULSCH Failure"));
   json_object_object_add(failure_fields, "rntiP", json_object_new_uint64(m.rntiP));
   json_object_object_add(failure_fields, "ngapId", json_object_new_uint64(m.ngap_id));
   json_object_object_add(failure_fields, "eventTime", json_object_new_string(str_time));
   json_object *root = json_object_new_object();
   json_object_object_add(root, "content", failure_fields);
   json_object_object_add(root, "type", json_object_new_string("FailureMessage"));
+  json_object_object_add(root, "hostname", json_object_new_string(ag->hostname));
+  json_object_object_add(root, "sequence", json_object_new_int(++o1_seqn));
+  return root;
+}
+
+json_object *my_gen_rlc_complete(o1_agent_t *ag, O1RlcCompleteMessage m)
+{
+  time_t rawtime;
+  time(&rawtime);
+  char str_time[20];
+  sprintf(str_time, "%ld", rawtime);
+  json_object *failure_fields = json_object_new_object();
+  json_object_object_add(failure_fields, "content", json_object_new_string("RLC Complete"));
+  json_object_object_add(failure_fields, "rntiP", json_object_new_uint64(m.rntiP));
+  json_object_object_add(failure_fields, "ngapId", json_object_new_uint64(m.ngap_id));
+  json_object_object_add(failure_fields, "eventTime", json_object_new_string(str_time));
+  json_object *root = json_object_new_object();
+  json_object_object_add(root, "content", failure_fields);
+  json_object_object_add(root, "type", json_object_new_string("OtherMessage"));
   json_object_object_add(root, "hostname", json_object_new_string(ag->hostname));
   json_object_object_add(root, "sequence", json_object_new_int(++o1_seqn));
   return root;

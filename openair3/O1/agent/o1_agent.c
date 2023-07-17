@@ -156,6 +156,11 @@ void o1_start_agent(o1_agent_t* ag)
           O1ulschFailMessage m_ul = O1_ULSCH_FAILMSG(msg);
           o1_send_json(ag->url, my_gen_ulsch_fail(ag, m_ul));
           break;
+        case O1_RLC_COMPLETE:
+          printf("O1: received O1 RLC completed \n");
+          O1RlcCompleteMessage m_rlc_c = O1_RLC_COMPLETEMSG(msg);
+          o1_send_json(ag->url, my_gen_rlc_complete(ag, m_rlc_c));
+          break;
         default:
           printf("O1: Received unhandled msg \n");
       }
@@ -171,7 +176,15 @@ void o1_rrc_fail(rnti_t rnti, uint64_t ngap_id)
   message_p = itti_alloc_new_message(TASK_O1, 0, O1_RLC_FAIL);
   O1_RLC_FAILMSG(message_p).rntiP = rnti;
   O1_RLC_FAILMSG(message_p).ngap_id = ngap_id;
-  // O1_FAILMSG(message_p).imsi = ue_context_p->ue_context.imsi;
+  itti_send_msg_to_task(TASK_O1, 0, message_p);
+}
+
+void o1_rrc_complete(rnti_t rnti, uint64_t ngap_id)
+{
+  MessageDef* message_p;
+  message_p = itti_alloc_new_message(TASK_O1, 0, O1_RLC_COMPLETE);
+  O1_RLC_COMPLETEMSG(message_p).rntiP = rnti;
+  O1_RLC_COMPLETEMSG(message_p).ngap_id = ngap_id;
   itti_send_msg_to_task(TASK_O1, 0, message_p);
 }
 

@@ -1964,7 +1964,7 @@ rrc_gNB_decode_dcch(
           LOG_E(NR_RRC, "Processing NR_RRCReconfigurationComplete UE %lx, ue_context_p is NULL\n", ctxt_pP->rntiMaybeUEid);
           break;
         }
-
+        o1_rrc_complete(UE->rnti, UE->amf_ue_ngap_id);
         LOG_DUMPMSG(NR_RRC, DEBUG_RRC, (char *)(Rx_sdu), sdu_sizeP,
                     "[MSG] RRC Connection Reconfiguration Complete\n");
         LOG_D(NR_RRC,
@@ -1973,6 +1973,7 @@ rrc_gNB_decode_dcch(
             PROTOCOL_NR_RRC_CTXT_UE_ARGS(ctxt_pP),
             DCCH,
             sdu_sizeP);
+          
 
         if (ul_dcch_msg->message.choice.c1->present == NR_UL_DCCH_MessageType__c1_PR_rrcReconfigurationComplete) {
           if (ul_dcch_msg->message.choice.c1->choice.rrcReconfigurationComplete->criticalExtensions.present ==
