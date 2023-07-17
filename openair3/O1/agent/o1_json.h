@@ -24,12 +24,14 @@
 
 #include <json-c/json.h>
 #include <curl/curl.h>
+#include <string.h>
 
 json_object *gen_head(char *domain, char *event_id, char *event_name, char *eventType, char *priority);
 json_object *gen_hb();
 json_object *gen_fm();
 json_object *gen_pm();
 json_object *gen_pnf();
+int o1_send_json(char *url, json_object *jo);
 
 struct pm_fields {
   int rnti;

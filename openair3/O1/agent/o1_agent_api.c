@@ -38,7 +38,7 @@ static inline void* static_start_agent(void* a)
 void init_o1_agent_api(o1_agent_args_t const* args)
 {
   assert(agent == NULL);
-  agent = o1_init_agent(args->url, args->report_interval);
+  agent = o1_init_agent(args->url, args->initial_sleep, args->hb_period, args->pm_period);
   // Spawn a new thread for the agent
   //const int rc = pthread_create(&thrd_agent, NULL, static_start_agent, NULL);
   // alternative using itti task:

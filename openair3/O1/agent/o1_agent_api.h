@@ -26,8 +26,10 @@
 #include "intertask_interface.h"
 
 typedef struct {
-  const char *url;
-  uint16_t report_interval;
+  char *url;
+  uint16_t initial_sleep;
+  float hb_period;
+  float pm_period;
 } o1_agent_args_t;
 
 void init_o1_agent_api(o1_agent_args_t const *args);

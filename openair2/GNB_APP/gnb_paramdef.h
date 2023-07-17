@@ -501,21 +501,29 @@ typedef enum {
 
 #define O1AGENT_CONFIG_ENABLE "enable"
 #define O1AGENT_CONFIG_URL "url"
-#define O1AGENT_CONFIG_REPORT_INTERVAL "report_interval"
+#define O1AGENT_CONFIG_HB_PERIOD "hb_period"
+#define O1AGENT_CONFIG_PM_PERIOD "pm_period"
+#define O1AGENT_CONFIG_INITIAL_SLEEP "initial_sleep"
 
 #define O1AGENT_PARAMS_DESC  \
   {  \
     {O1AGENT_CONFIG_ENABLE, "Enable the O1 Agent", PARAMFLAG_BOOL, iptr : NULL, defintval : o1agent_config_enable_default, TYPE_INT, 0},            \
     {O1AGENT_CONFIG_URL, "VES termination URL", 0, strptr : NULL, defstrval : (char *)o1agent_config_url_default, TYPE_STRING, 0},              \
-    {O1AGENT_CONFIG_REPORT_INTERVAL, "Report interval", 0, u16ptr : NULL, defuintval : e2agent_config_report_interval_default, TYPE_UINT16, 0}, \
+    {O1AGENT_CONFIG_HB_PERIOD, "Heartbeat Period", 0, dblptr : NULL, defuintval : o1agent_config_hb_period_default, TYPE_DOUBLE, 0}, \
+    {O1AGENT_CONFIG_PM_PERIOD, "Performance reporting Period ", 0, dblptr : NULL, defuintval : o1agent_config_pm_period_default, TYPE_DOUBLE, 0}, \
+    {O1AGENT_CONFIG_INITIAL_SLEEP, "Initial Sleep", 0, u16ptr : NULL, defuintval : o1agent_config_initial_sleep_default, TYPE_UINT16, 0}, \
   }
 
 #define O1AGENT_CONFIG_ENABLE_IDX 0
 #define O1AGENT_CONFIG_URL_IDX 1
-#define O1AGENT_CONFIG_REPORT_INTERVAL_IDX 2
+#define O1AGENT_CONFIG_HB_PERIOD_IDX 2
+#define O1AGENT_CONFIG_PM_PERIOD_IDX 3
+#define O1AGENT_CONFIG_INITIAL_SLEEP_IDX 4
 
 static const bool o1agent_config_enable_default = 0;
-static const char *const o1agent_config_url_default = "http://localhost/";
-static const uint16_t e2agent_config_report_interval_default = 5; // seconds
+static char *const o1agent_config_url_default = "http://localhost/";
+static const uint16_t o1agent_config_initial_sleep_default = 10; // seconds
+static const double_t o1agent_config_hb_period_default = 30.0; // seconds.ms
+static const double_t o1agent_config_pm_period_default = 10.0; // seconds.ms
 
 #endif

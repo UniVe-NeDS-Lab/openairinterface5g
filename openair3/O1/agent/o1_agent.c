@@ -23,7 +23,7 @@
 
 extern RAN_CONTEXT_t RC;
 
-o1_agent_t* o1_init_agent(const char* url, uint16_t report_interval)
+o1_agent_t* o1_init_agent(const char* url, uint16_t initial_sleep, double hb_period, double pm_period)
 {
   assert(url != NULL);
   // TODO: Check it's valid url (http or https)
@@ -32,11 +32,10 @@ o1_agent_t* o1_init_agent(const char* url, uint16_t report_interval)
   o1_agent_t* ag = calloc(1, sizeof(*ag));
   assert(ag != NULL && "Memory exhausted");
   ag->url = malloc(strlen(url) * sizeof(char));
-  ag->initial_sleep = 10;
-  ag->hb_period = 3.5;
-  ag->pm_period = 10.5;
+  ag->initial_sleep = initial_sleep;
+  ag->hb_period = hb_period;
+  ag->pm_period = pm_period;
   strcpy(ag->url, url);
-  ag->report_interval = report_interval;
   return ag;
 }
 
@@ -149,13 +148,12 @@ void o1_start_agent(o1_agent_t* ag)
   return;
 }
 
-
-
-void o1_rrc_fail(rnti_t rnti, uint64_t ngap_id){
-  MessageDef *message_p;
+void o1_rrc_fail(rnti_t rnti, uint64_t ngap_id)
+{
+  MessageDef* message_p;
   message_p = itti_alloc_new_message(TASK_O1, 0, O1_RLC_FAIL);
   O1_FAILMSG(message_p).rntiP = rnti;
   O1_FAILMSG(message_p).ngap_id = ngap_id;
-  //O1_FAILMSG(message_p).imsi = ue_context_p->ue_context.imsi;
+  // O1_FAILMSG(message_p).imsi = ue_context_p->ue_context.imsi;
   itti_send_msg_to_task(TASK_O1, 0, message_p);
 }

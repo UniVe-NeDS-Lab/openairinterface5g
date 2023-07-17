@@ -36,6 +36,7 @@ int o1_seqn = 0;
 
 int init_curl()
 {
+  return 0;
 }
 
 int o1_send_json(char *url, json_object *jo)
@@ -58,7 +59,7 @@ int o1_send_json(char *url, json_object *jo)
   curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
   curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
 
-  char *enc_jo = json_object_to_json_string_ext(jo, JSON_C_TO_STRING_PLAIN);
+  const char *enc_jo = json_object_to_json_string_ext(jo, JSON_C_TO_STRING_PLAIN);
   curl_easy_setopt(curl, CURLOPT_POSTFIELDS, enc_jo);
 
   CURLcode res = curl_easy_perform(curl);
@@ -95,7 +96,9 @@ json_object *gen_head(char *domain, char *event_id, char *event_name, char *even
   json_object_object_add(common_head, "version", json_object_new_string("4.0"));
   json_object_object_add(common_head, "vesEventListenerVersion", json_object_new_string("7.2.1"));
   if (strcmp(domain, "stndDefined") == 0) {
-    json_object_object_add(common_head, "stndDefinedNamespace", json_object_new_string("o-ran-sc-du-hello-world-pm-streaming-oas3"));
+    json_object_object_add(common_head,
+                           "stndDefinedNamespace",
+                           json_object_new_string("o-ran-sc-du-hello-world-pm-streaming-oas3"));
   }
   return common_head;
 }
@@ -140,7 +143,9 @@ json_object *gen_fm()
   json_object_object_add(alarm_additional_information, "model", json_object_new_string(""));
   json_object *event = json_object_new_object();
   json_object_object_add(event, "faultFields", fault_fields);
-  json_object_object_add(event, "commonEventHeader", gen_head("fault", "O_RAN_COMPONENT_Alarms-30", "O_RAN_COMPONENT_Alarms", "", "Low"));
+  json_object_object_add(event,
+                         "commonEventHeader",
+                         gen_head("fault", "O_RAN_COMPONENT_Alarms-30", "O_RAN_COMPONENT_Alarms", "", "Low"));
   json_object *root = json_object_new_object();
   json_object_object_add(root, "event", event);
   return root;
@@ -219,7 +224,10 @@ json_object *gen_pm(struct pm_fields pm_f)
   json_object_object_add(stnd_fields, "stndDefinedFieldsVersion", json_object_new_string("1.0"));
   json_object_object_add(stnd_fields, "data", data_fields);
   json_object_object_add(event, "stndDefinedFields", stnd_fields);
-  json_object_object_add(event, "commonEventHeader", gen_head("stndDefined", "pm-1", "stndDefined_performanceMeasurementStreaming", "performanceMeasurementStreaming", "Low"));
+  json_object_object_add(
+      event,
+      "commonEventHeader",
+      gen_head("stndDefined", "pm-1", "stndDefined_performanceMeasurementStreaming", "performanceMeasurementStreaming", "Low"));
   json_object *root = json_object_new_object();
   json_object_object_add(root, "event", event);
   return root;

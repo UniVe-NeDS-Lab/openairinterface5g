@@ -32,18 +32,17 @@
 #include "event2/event.h"
 
 typedef struct o1_agent_s {
-  const char* url;
+  char* url;
   float hb_period;
   float pm_period;
   int initial_sleep;
 
-  uint16_t report_interval;
   atomic_bool agent_stopped;
   struct event_base* ev_base;
 } o1_agent_t;
 
 // API
-o1_agent_t* o1_init_agent(const char* url, uint16_t report_interval);
+o1_agent_t* o1_init_agent(const char* url, uint16_t initial_sleep, double hb_period, double pm_period);
 void o1_free_agent(o1_agent_t* ag);
 void o1_start_agent(o1_agent_t* ag);
 

@@ -2258,13 +2258,23 @@ bool config_O1agent(o1_agent_args_t *args)
 {
   paramdef_t o1agent_params[] = O1AGENT_PARAMS_DESC;
   int ret = config_get(o1agent_params, sizeof(o1agent_params) / sizeof(paramdef_t), CONFIG_STRING_O1AGENT);
+
+  // First set defaults
+  args->url = o1agent_config_url_default;
+  args->initial_sleep = o1agent_config_initial_sleep_default;
+  args->pm_period = o1agent_config_pm_period_default;
+  args->hb_period = o1agent_config_hb_period_default;
+
   if (ret < 0) {
+    // If the section is missing do not enable? BUG: it starts anyhow.
     LOG_W(GNB_APP, "configuration file does not contain a \"%s\" section, applying default parameters\n", CONFIG_STRING_O1AGENT);
-    args->url = o1agent_config_url_default;
-    args->report_interval = e2agent_config_report_interval_default;
     return o1agent_config_enable_default;
   }
+
+  //Override the default vals
   args->url = *o1agent_params[O1AGENT_CONFIG_URL_IDX].strptr;
-  args->report_interval = *o1agent_params[O1AGENT_CONFIG_REPORT_INTERVAL_IDX].u16ptr;
+  args->initial_sleep = *o1agent_params[O1AGENT_CONFIG_INITIAL_SLEEP_IDX].u16ptr;
+  args->pm_period = *o1agent_params[O1AGENT_CONFIG_PM_PERIOD_IDX].dblptr;
+  args->hb_period = *o1agent_params[O1AGENT_CONFIG_HB_PERIOD_IDX].dblptr;
   return *o1agent_params[O1AGENT_CONFIG_ENABLE_IDX].iptr;
 }

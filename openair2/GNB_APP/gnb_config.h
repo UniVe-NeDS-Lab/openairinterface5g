@@ -46,6 +46,7 @@
 #include "rrc_messages_types.h"
 #include "intertask_interface.h"
 #include "RRC/NR/nr_rrc_defs.h"
+#include "openair3/O1/agent/o1_agent_api.h"
 
 #define IPV4_STR_ADDR_TO_INT_NWBO(AdDr_StR,NwBo,MeSsAgE ) do {\
             struct in_addr inp;\
@@ -109,7 +110,7 @@ int gNB_app_handle_f1ap_gnb_cu_configuration_update(f1ap_gnb_cu_configuration_up
 void nr_read_config_and_init(void);
 MessageDef *RCconfig_NR_CU_E1(bool separate_CUUP_process);
 ngran_node_t get_node_type(void);
-// bool config_O1agent(o1_agent_args_t *args);
+bool config_O1agent(o1_agent_args_t *args);
 
 #endif /* GNB_CONFIG_H_ */
 /** @} */
