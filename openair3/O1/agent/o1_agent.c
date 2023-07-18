@@ -21,7 +21,7 @@
 
 #include "o1_agent.h"
 #include "o1_json.h"
-#include "openair2/RRC/NR/nr_rrc_defs.h"
+#include "openair2/RRC/NR/rrc_gNB_UE_context.h"
 
 extern RAN_CONTEXT_t RC;
 
@@ -90,12 +90,12 @@ void o1_send_pm(int fd, short event, void* arg)
       if (pmf[ueIndex].rnti) {
         // We ned to get the UE Context to retrieve the ngap_id
         // 0 is hardcoded, hopefully it doesn't break
-        // volatile rrc_gNB_ue_context_t* ue_context_p = rrc_gNB_get_ue_context_by_rnti(RC.nrrrc[0], pmf[ueIndex].rnti);
-        // if (ue_context_p != NULL) {
-        //   printf("%d", ue_context_p->ue_context.amf_ue_ngap_id);
-        //   pmf[ueIndex].ngap_id = ue_context_p->ue_context.amf_ue_ngap_id;
-        //   printf("%d", ue_context_p->ue_context.amf_ue_ngap_id);
-        // }
+        rrc_gNB_ue_context_t* ue_context_p = rrc_gNB_get_ue_context_by_rnti(RC.nrrrc[0], pmf[ueIndex].rnti);
+        if (ue_context_p != NULL) {
+          printf("%d", ue_context_p->ue_context.amf_ue_ngap_id);
+          pmf[ueIndex].ngap_id = ue_context_p->ue_context.amf_ue_ngap_id;
+          printf("%d", ue_context_p->ue_context.amf_ue_ngap_id);
+        }
         o1_send_json(ag->url, my_gen_pm(ag, pmf[ueIndex]));
       }
     }
