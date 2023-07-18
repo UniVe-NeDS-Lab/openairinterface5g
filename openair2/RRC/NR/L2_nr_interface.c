@@ -47,6 +47,8 @@
 #include <openair2/RRC/NR/MESSAGES/asn1_msg.h>
 #include "nr_pdcp/nr_pdcp_oai_api.h"
 
+#include "openair3/O1/agent/o1_agent.h"
+
 extern RAN_CONTEXT_t RC;
 
 void nr_rrc_mac_remove_ue(rnti_t rntiMaybeUEid)

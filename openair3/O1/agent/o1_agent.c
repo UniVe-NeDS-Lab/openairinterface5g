@@ -30,7 +30,7 @@ o1_agent_t* o1_init_agent(const char* url, uint16_t initial_sleep, double hb_per
   assert(url != NULL);
   // TODO: Check it's valid url (http or https)
 
-  printf("[O1 AGENT]: Initializing ... \n");
+  LOG_I(O1, "Initializing\n");
   o1_agent_t* ag = calloc(1, sizeof(*ag));
   assert(ag != NULL && "Memory exhausted");
   ag->url = malloc(strlen(url) * sizeof(char));
@@ -57,13 +57,14 @@ void o1_free_agent(o1_agent_t* ag)
 void o1_send_hb(int fd, short event, void* arg)
 {
   o1_agent_t* ag = (o1_agent_t*)arg;
-  printf("O1: Sending HB\n\n");
+  LOG_I(O1, "Sending HB\n");
+
   o1_send_json(ag->url, my_gen_hb(ag));
 }
 
 void o1_send_pm(int fd, short event, void* arg)
 {
-  printf("O1: Sending PM\n\n");
+  LOG_I(O1, "Sending PM\n");
   o1_agent_t* ag = (o1_agent_t*)arg;
   for (int i = 0; i < RC.nb_nr_macrlc_inst; i++) {
     struct pm_fields pmf[MAX_MOBILES_PER_GNB + 1];
@@ -92,9 +93,7 @@ void o1_send_pm(int fd, short event, void* arg)
         // 0 is hardcoded, hopefully it doesn't break
         rrc_gNB_ue_context_t* ue_context_p = rrc_gNB_get_ue_context_by_rnti(RC.nrrrc[0], pmf[ueIndex].rnti);
         if (ue_context_p != NULL) {
-          printf("%d", ue_context_p->ue_context.amf_ue_ngap_id);
           pmf[ueIndex].ngap_id = ue_context_p->ue_context.amf_ue_ngap_id;
-          printf("%d", ue_context_p->ue_context.amf_ue_ngap_id);
         }
         o1_send_json(ag->url, my_gen_pm(ag, pmf[ueIndex]));
       }
@@ -147,22 +146,22 @@ void o1_start_agent(o1_agent_t* ag)
     if (msg != NULL) {
       switch (ITTI_MSG_ID(msg)) {
         case O1_RLC_FAIL:
-          printf("O1: Received O1_RLC_FAIL msg \n");
+          LOG_I(O1, "Received O1_RLC_FAIL msg\n");
           O1RlcFailMessage m_rlc = O1_RLC_FAILMSG(msg);
           o1_send_json(ag->url, my_gen_rlc_fail(ag, m_rlc));
           break;
         case O1_ULSCH_FAIL:
-          printf("O1: Received O1 ULSCH Fail mgs \n");
+          LOG_I(O1, "Received O1_ULSCH_FAIL msg\n");
           O1ulschFailMessage m_ul = O1_ULSCH_FAILMSG(msg);
           o1_send_json(ag->url, my_gen_ulsch_fail(ag, m_ul));
           break;
         case O1_RLC_COMPLETE:
-          printf("O1: received O1 RLC completed \n");
+          LOG_I(O1, "Received O1_RLC_COMPLETE msg\n");
           O1RlcCompleteMessage m_rlc_c = O1_RLC_COMPLETEMSG(msg);
           o1_send_json(ag->url, my_gen_rlc_complete(ag, m_rlc_c));
           break;
         default:
-          printf("O1: Received unhandled msg \n");
+          LOG_W(O1, "Received unknown msg\n");
       }
       itti_free(TASK_O1, msg);
     }
