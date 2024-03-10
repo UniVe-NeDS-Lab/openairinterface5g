@@ -161,6 +161,8 @@ json_object *my_gen_pm(o1_agent_t *ag, struct pm_fields pm_f)
   json_object_object_add(meas, "srs_wide_band_snr", json_object_new_int(pm_f.srs_wide_band_snr));
   json_object_object_add(meas, "ulsch_mcs", json_object_new_int(pm_f.ulsch_mcs));
   json_object_object_add(meas, "dlsch_mcs", json_object_new_int(pm_f.dlsch_mcs));
+  json_object_object_add(meas, "ul_bytes", json_object_new_int(pm_f.ul_bytes));
+  json_object_object_add(meas, "dl_bytes", json_object_new_int(pm_f.dl_bytes));
   json_object *root = json_object_new_object();
   json_object_object_add(root, "content", meas);
   json_object_object_add(root, "type", json_object_new_string("PerformanceMessage"));

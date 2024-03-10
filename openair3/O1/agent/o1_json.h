@@ -37,6 +37,8 @@ struct pm_fields {
   int cqi;
   float dlsch_bler;
   float ulsch_bler;
+  uint64_t ul_bytes;
+  uint64_t dl_bytes;
 };
 
 json_object *gen_head(char *domain, char *event_id, char *event_name, char *eventType, char *priority);

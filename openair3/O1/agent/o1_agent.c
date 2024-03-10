@@ -81,6 +81,8 @@ void o1_send_pm(int fd, short event, void* arg)
       pmf[ueIndex].dlsch_mcs = sched_ctrl->dl_bler_stats.mcs;
       pmf[ueIndex].ulsch_bler = sched_ctrl->ul_bler_stats.bler;
       pmf[ueIndex].ulsch_mcs = sched_ctrl->ul_bler_stats.mcs;
+      pmf[ueIndex].ul_bytes = stats->ul.total_bytes;
+      pmf[ueIndex].dl_bytes = stats->dl.total_bytes;
       pmf[ueIndex].cqi = sched_ctrl->CSI_report.cri_ri_li_pmi_cqi_report.wb_cqi_1tb;
       pthread_mutex_unlock(&RC.nrmac[i]->UE_info.mutex);
       ueIndex += 1;
@@ -107,7 +109,7 @@ struct timeval seconds_to_timeval(float time)
   int seconds = (int)time;
   int millis = (int)((time - seconds) * 1000);
   tv.tv_sec = seconds;
-  tv.tv_usec = millis;
+  tv.tv_usec = millis * 1000;
   return tv;
 }
 
