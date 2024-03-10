@@ -532,7 +532,7 @@ typedef enum {
 static const bool o1agent_config_enable_default = 0;
 static char *const o1agent_config_url_default = "http://localhost/";
 static const uint16_t o1agent_config_initial_sleep_default = 10; // seconds
-static const double_t o1agent_config_hb_period_default = 30.0; // seconds.ms
-static const double_t o1agent_config_pm_period_default = 10.0; // seconds.ms
+static const double_t o1agent_config_hb_period_default = 30000; // ms
+static const double_t o1agent_config_pm_period_default = 10000; // ms
 
 #endif

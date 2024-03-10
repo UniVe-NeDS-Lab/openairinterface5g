@@ -114,8 +114,8 @@ struct timeval seconds_to_timeval(float time)
 void o1_start_agent(o1_agent_t* ag)
 {
   ag->ev_base = event_base_new();
-  struct timeval hb_tv = seconds_to_timeval(ag->hb_period);
-  struct timeval pm_tv = seconds_to_timeval(ag->pm_period);
+  struct timeval hb_tv = seconds_to_timeval(ag->hb_period / 1000);
+  struct timeval pm_tv = seconds_to_timeval(ag->pm_period / 1000);
   // Sleep to wait for the initalization of OAI
   sleep(ag->initial_sleep);
 
